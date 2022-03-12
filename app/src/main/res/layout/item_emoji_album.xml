@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/emoji_album"
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        android:src="@drawable/ic_default_album"/>
+
+    <TextView
+        android:id="@+id/emoji_title"
+        android:layout_width="128dp"
+        android:layout_height="24dp"
+        android:text="默认"
+        android:textStyle="bold"
+        android:gravity="center_vertical"/>
+
+    <TextView
+        android:id="@+id/emoji_count"
+        android:layout_width="128dp"
+        android:layout_height="24dp"
+        android:gravity="center_vertical"
+        android:text="0"/>
+
+</LinearLayout>

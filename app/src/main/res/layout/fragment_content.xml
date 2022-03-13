@@ -8,14 +8,10 @@
         android:id="@+id/grid_emoji_album"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="32dp"
+        android:columnWidth="160dp"
+        android:layout_marginTop="4dp"
         android:layout_marginBottom="56dp"
-        android:columnWidth="128dp"
-        android:horizontalSpacing="16dp"
         android:listSelector="@android:color/transparent"
-        android:numColumns="2"
-        android:verticalSpacing="32dp" />
+        android:numColumns="2" />
 
 </LinearLayout>

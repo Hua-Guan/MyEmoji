@@ -50,6 +50,8 @@ public class EmojiAlbumAdapter extends BaseAdapter {
             holder.mEmojiAlbumCount = convertView.findViewById(R.id.emoji_count);
             //
             EmojiAlbumBean bean = list.get(position);
+            //设置圆角
+            holder.mEmojiAlbum.setClipToOutline(true);
             if (bean.getEmojiAlbumUri() != null) {
                 //加载封面
                 Glide.with(convertView).load(list.get(position)).into(holder.mEmojiAlbum);

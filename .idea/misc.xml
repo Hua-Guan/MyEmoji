@@ -5,6 +5,7 @@
       <map>
         <entry key="..\:/AndroidProject/MyEmoji/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1895" />
         <entry key="..\:/AndroidProject/MyEmoji/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1895" />
+        <entry key="..\:/AndroidProject/MyEmoji/app/src/main/res/drawable/shape_rectangle.xml" value="0.181" />
         <entry key="..\:/AndroidProject/MyEmoji/app/src/main/res/layout/activity_main.xml" value="0.2033514492753623" />
         <entry key="..\:/AndroidProject/MyEmoji/app/src/main/res/layout/fragment_content.xml" value="0.2708333333333333" />
         <entry key="..\:/AndroidProject/MyEmoji/app/src/main/res/layout/item_emoji_album.xml" value="0.23369565217391305" />

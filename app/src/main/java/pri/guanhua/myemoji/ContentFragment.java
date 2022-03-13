@@ -1,6 +1,8 @@
 package pri.guanhua.myemoji;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +17,15 @@ import java.util.List;
 
 import pri.guanhua.myemoji.model.adapter.EmojiAlbumAdapter;
 import pri.guanhua.myemoji.model.bean.EmojiAlbumBean;
+import pri.guanhua.myemoji.model.dao.EmojiAlbumDao;
+import pri.guanhua.myemoji.model.database.AppDatabase;
+import pri.guanhua.myemoji.model.entity.EmojiAlbumEntity;
 
 public class ContentFragment extends Fragment {
 
     private View mView = null;
+
+    private Handler mHandler = new Handler(Looper.myLooper());
 
     //表情包专辑
     private GridView mGridEmojiAlbum = null;
@@ -50,16 +57,27 @@ public class ContentFragment extends Fragment {
     private void setGridEmojiAlbum(){
         if (mAdapter == null){
             List<EmojiAlbumBean> list = new ArrayList<>();
-            EmojiAlbumBean bean = new EmojiAlbumBean();
-            bean.setEmojiAlbumUri(null);
-            bean.setEmojiAlbumTitle(null);
-            bean.setEmojiAlbumCount(null);
-            list.add(bean);
-            for (int i = 0; i< 23; i++){
-                list.add(bean);
-            }
-            mAdapter = new EmojiAlbumAdapter(list, getContext());
-            mGridEmojiAlbum.setAdapter(mAdapter);
+            EmojiAlbumDao emojiAlbumDao = AppDatabase.getInstance(getContext()).emojiAlbumDao();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    List<EmojiAlbumEntity> all = emojiAlbumDao.getAll();
+                    for (int i = 0; i < all.size(); i++){
+                        EmojiAlbumBean bean = new EmojiAlbumBean();
+                        bean.setEmojiAlbumUri(null);
+                        bean.setEmojiAlbumTitle(all.get(i).emojiAlbumTitle);
+                        bean.setEmojiAlbumCount(null);
+                        list.add(bean);
+                    }
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mAdapter = new EmojiAlbumAdapter(list, getContext());
+                            mGridEmojiAlbum.setAdapter(mAdapter);
+                        }
+                    });
+                }
+            }).start();
         }
     }
 }

@@ -3,12 +3,15 @@ package pri.guanhua.myemoji;
 import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -25,6 +28,8 @@ import java.util.Objects;
 
 import pri.guanhua.myemoji.model.adapter.EmojiAlbumAdapter;
 import pri.guanhua.myemoji.model.bean.EmojiAlbumBean;
+import pri.guanhua.myemoji.model.database.AppDatabase;
+import pri.guanhua.myemoji.model.entity.EmojiAlbumEntity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar mToolbar = null;
     //抽屉容器
     private DrawerLayout mDrawerLayout = null;
+    //handle
+    private Handler mHandler = new Handler(Looper.myLooper());
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -101,7 +108,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.add){
-
+            AppDatabase instance = AppDatabase.getInstance(this);
+            EmojiAlbumEntity entity = new EmojiAlbumEntity();
+            entity.id = 0;
+            entity.emojiAlbumTitle = "test";
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    instance.emojiAlbumDao().insertAll(entity);
+                    //弹出通知
+                    mHandler.post(() -> Toast.makeText(getApplicationContext(), "新建成功", Toast.LENGTH_SHORT).show());
+                }
+            }).start();
         }
         return super.onOptionsItemSelected(item);
     }

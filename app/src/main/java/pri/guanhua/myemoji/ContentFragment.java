@@ -11,6 +11,8 @@ import android.widget.GridView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,17 +22,20 @@ import pri.guanhua.myemoji.model.bean.EmojiAlbumBean;
 import pri.guanhua.myemoji.model.dao.EmojiAlbumDao;
 import pri.guanhua.myemoji.model.database.AppDatabase;
 import pri.guanhua.myemoji.model.entity.EmojiAlbumEntity;
+import pri.guanhua.myemoji.model.viewmodel.AppViewModel;
 
 public class ContentFragment extends Fragment {
 
     private View mView = null;
 
-    private Handler mHandler = new Handler(Looper.myLooper());
+    private final Handler mHandler = new Handler(Looper.myLooper());
 
     //表情包专辑
     private GridView mGridEmojiAlbum = null;
     //表情包专辑适配器
     private EmojiAlbumAdapter mAdapter = null;
+    List<EmojiAlbumBean> mList = new ArrayList<>();
+    private AppViewModel model = null;
 
     @Nullable
     @Override
@@ -46,6 +51,7 @@ public class ContentFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         initView();
         setGridEmojiAlbum();
+        setOnEmojiAlbumAddObserver();
     }
 
     private void initView(){
@@ -56,7 +62,6 @@ public class ContentFragment extends Fragment {
 
     private void setGridEmojiAlbum(){
         if (mAdapter == null){
-            List<EmojiAlbumBean> list = new ArrayList<>();
             EmojiAlbumDao emojiAlbumDao = AppDatabase.getInstance(getContext()).emojiAlbumDao();
             new Thread(new Runnable() {
                 @Override
@@ -67,12 +72,12 @@ public class ContentFragment extends Fragment {
                         bean.setEmojiAlbumUri(null);
                         bean.setEmojiAlbumTitle(all.get(i).emojiAlbumTitle);
                         bean.setEmojiAlbumCount(null);
-                        list.add(bean);
+                        mList.add(bean);
                     }
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            mAdapter = new EmojiAlbumAdapter(list, getContext());
+                            mAdapter = new EmojiAlbumAdapter(mList, getContext());
                             mGridEmojiAlbum.setAdapter(mAdapter);
                         }
                     });
@@ -80,4 +85,19 @@ public class ContentFragment extends Fragment {
             }).start();
         }
     }
+
+    private void setOnEmojiAlbumAddObserver(){
+        if (model == null){
+            model = new ViewModelProvider(requireActivity()).get(AppViewModel.class);
+        }
+        Observer<EmojiAlbumBean> observer = new Observer<EmojiAlbumBean>(){
+            @Override
+            public void onChanged(EmojiAlbumBean emojiAlbumBean) {
+                mList.add(emojiAlbumBean);
+                mAdapter.notifyDataSetChanged();
+            }
+        };
+        model.getEmojiAlbumAddLiveData().observe(getViewLifecycleOwner(), observer);
+    }
+
 }

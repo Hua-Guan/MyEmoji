@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.Toast;
@@ -22,6 +23,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +33,7 @@ import pri.guanhua.myemoji.model.adapter.EmojiAlbumAdapter;
 import pri.guanhua.myemoji.model.bean.EmojiAlbumBean;
 import pri.guanhua.myemoji.model.database.AppDatabase;
 import pri.guanhua.myemoji.model.entity.EmojiAlbumEntity;
+import pri.guanhua.myemoji.model.viewmodel.AppViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -44,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout = null;
     //handle
     private Handler mHandler = new Handler(Looper.myLooper());
+    //viewModel
+    private AppViewModel mAppViewModel = null;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -119,19 +124,41 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         View dialogView = View.inflate(this, R.layout.dialog_create_emoji_album, null);
         dialog.setView(dialogView);
+        dialogView.findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+            }
+        });
+        EditText editText = dialogView.findViewById(R.id.edit_emoji_title);
         dialogView.findViewById(R.id.btn_confirm).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AppDatabase instance = AppDatabase.getInstance(MainActivity.this);
                 EmojiAlbumEntity entity = new EmojiAlbumEntity();
                 entity.id = 0;
-                entity.emojiAlbumTitle = "test";
+                entity.emojiAlbumTitle = editText.getText().toString();
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         instance.emojiAlbumDao().insertAll(entity);
                         //弹出通知
                         mHandler.post(() -> Toast.makeText(getApplicationContext(), "新建成功", Toast.LENGTH_SHORT).show());
+                        //关闭dialog更新gridview
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                dialog.cancel();
+                                if (mAppViewModel == null){
+                                    mAppViewModel = new ViewModelProvider(MainActivity.this).get(AppViewModel.class);
+                                }
+                                EmojiAlbumBean bean = new EmojiAlbumBean();
+                                bean.setEmojiAlbumUri(null);
+                                bean.setEmojiAlbumTitle(editText.getText().toString());
+                                bean.setEmojiAlbumCount(null);
+                                mAppViewModel.getEmojiAlbumAddLiveData().setValue(bean);
+                            }
+                        });
                     }
                 }).start();
             }

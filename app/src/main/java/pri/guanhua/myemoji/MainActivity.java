@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.GridView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,29 +23,30 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import com.google.android.material.navigation.NavigationView;
 
-import pri.guanhua.myemoji.model.adapter.EmojiAlbumAdapter;
 import pri.guanhua.myemoji.model.bean.EmojiAlbumBean;
 import pri.guanhua.myemoji.model.database.AppDatabase;
 import pri.guanhua.myemoji.model.entity.EmojiAlbumEntity;
 import pri.guanhua.myemoji.model.viewmodel.AppViewModel;
+import pri.guanhua.myemoji.view.EmojiAlbumFragment;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ContentFragment mContentFragment = null;
+    private EmojiAlbumFragment mEmojiAlbumFragment = null;
     private FrameLayout mContainer = null;
-    //fragment管理器
-    private FragmentManager mSupportFragmentManager = null;
     //Toolbar
     private Toolbar mToolbar = null;
     //抽屉容器
     private DrawerLayout mDrawerLayout = null;
     //handle
-    private Handler mHandler = new Handler(Looper.myLooper());
+    private final Handler mHandler = new Handler(Looper.myLooper());
     //viewModel
     private AppViewModel mAppViewModel = null;
 
@@ -57,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initView();
         setToolbar();
-        setDrawerLayout();
         setContentFragment();
     }
 
@@ -76,33 +75,27 @@ public class MainActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void setToolbar(){
         setSupportActionBar(mToolbar);
-        //Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        //getSupportActionBar().setHomeButtonEnabled(true);
         //把状态栏的文字设置为黑色
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         //把状态栏设置透明
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-    }
-
-    private void setDrawerLayout(){
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
-                mDrawerLayout,
-                mToolbar,
-                R.string.drawer_open,
-                R.string.drawer_close);
-        toggle.syncState();
-        mDrawerLayout.addDrawerListener(toggle);
+        //把toolbar和导航图绑定
+        NavHostFragment navHostFragment =
+                (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.content_frame);
+        assert navHostFragment != null;
+        NavController navController = navHostFragment.getNavController();
+        AppBarConfiguration  build = new AppBarConfiguration.Builder(navController.getGraph())
+                .setOpenableLayout(mDrawerLayout).build();
+        NavigationUI.setupWithNavController(mToolbar, navController, build);
+        //
+        NavigationView navView = findViewById(R.id.left_drawer);
+        NavigationUI.setupWithNavController(navView, navController);
     }
 
     private void setContentFragment(){
-        if (mContentFragment == null){
-            mContentFragment = new ContentFragment();
+        if (mEmojiAlbumFragment == null){
+            mEmojiAlbumFragment = new EmojiAlbumFragment();
         }
-        if (mSupportFragmentManager == null){
-            mSupportFragmentManager = getSupportFragmentManager();
-        }
-        FragmentTransaction fragmentTransaction = mSupportFragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.content_frame, mContentFragment).commit();
     }
 
     @Override

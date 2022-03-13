@@ -23,19 +23,23 @@
             android:layout_height="@dimen/split_line"
             android:background="@color/split_line"/>
 
-        <FrameLayout
+        <androidx.fragment.app.FragmentContainerView
             android:id="@+id/content_frame"
+            android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            app:defaultNavHost="true"
+            app:navGraph="@navigation/nav_graph" />
 
     </LinearLayout>
 
-    <FrameLayout
+    <com.google.android.material.navigation.NavigationView
         android:id="@+id/left_drawer"
         android:layout_width="280dp"
         android:layout_height="match_parent"
         android:layout_gravity="left"
         android:choiceMode="singleChoice"
+        android:fitsSystemWindows="true"
         android:background="@android:color/white"
         tools:ignore="RtlHardcoded" />
 

@@ -1,4 +1,4 @@
-package pri.guanhua.myemoji;
+package pri.guanhua.myemoji.view;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -6,17 +6,22 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import pri.guanhua.myemoji.R;
 import pri.guanhua.myemoji.model.adapter.EmojiAlbumAdapter;
 import pri.guanhua.myemoji.model.bean.EmojiAlbumBean;
 import pri.guanhua.myemoji.model.dao.EmojiAlbumDao;
@@ -24,7 +29,7 @@ import pri.guanhua.myemoji.model.database.AppDatabase;
 import pri.guanhua.myemoji.model.entity.EmojiAlbumEntity;
 import pri.guanhua.myemoji.model.viewmodel.AppViewModel;
 
-public class ContentFragment extends Fragment {
+public class EmojiAlbumFragment extends Fragment {
 
     private View mView = null;
 
@@ -52,6 +57,7 @@ public class ContentFragment extends Fragment {
         initView();
         setGridEmojiAlbum();
         setOnEmojiAlbumAddObserver();
+        setOnGridViewItemClickListener();
     }
 
     private void initView(){
@@ -98,6 +104,15 @@ public class ContentFragment extends Fragment {
             }
         };
         model.getEmojiAlbumAddLiveData().observe(getViewLifecycleOwner(), observer);
+    }
+
+    private void setOnGridViewItemClickListener(){
+        mGridEmojiAlbum.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Navigation.findNavController(mGridEmojiAlbum).navigate(R.id.action_emojiAlbumFragment_to_emojisFragment);
+            }
+        });
     }
 
 }

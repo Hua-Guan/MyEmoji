@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/nav_graph">
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/emojiAlbumFragment">
 
+    <fragment
+        android:id="@+id/emojiAlbumFragment"
+        android:name="pri.guanhua.myemoji.view.EmojiAlbumFragment"
+        android:label="超级表情包" >
+        <action
+            android:id="@+id/action_emojiAlbumFragment_to_emojisFragment"
+            app:destination="@id/emojisFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/emojisFragment"
+        android:name="pri.guanhua.myemoji.view.EmojisFragment"
+        android:label="收藏夹" />
 </navigation>

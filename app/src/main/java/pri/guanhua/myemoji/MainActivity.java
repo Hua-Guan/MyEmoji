@@ -1,6 +1,5 @@
 package pri.guanhua.myemoji;
 
-import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,16 +14,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -35,11 +30,9 @@ import pri.guanhua.myemoji.model.bean.EmojiAlbumBean;
 import pri.guanhua.myemoji.model.database.AppDatabase;
 import pri.guanhua.myemoji.model.entity.EmojiAlbumEntity;
 import pri.guanhua.myemoji.model.viewmodel.AppViewModel;
-import pri.guanhua.myemoji.view.EmojiAlbumFragment;
 
 public class MainActivity extends AppCompatActivity {
 
-    private EmojiAlbumFragment mEmojiAlbumFragment = null;
     private FrameLayout mContainer = null;
     //Toolbar
     private Toolbar mToolbar = null;
@@ -57,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initView();
         setToolbar();
-        setContentFragment();
     }
 
     private void initView(){
@@ -87,15 +79,9 @@ public class MainActivity extends AppCompatActivity {
         AppBarConfiguration  build = new AppBarConfiguration.Builder(navController.getGraph())
                 .setOpenableLayout(mDrawerLayout).build();
         NavigationUI.setupWithNavController(mToolbar, navController, build);
-        //
+        //把抽屉和导航图绑定
         NavigationView navView = findViewById(R.id.left_drawer);
         NavigationUI.setupWithNavController(navView, navController);
-    }
-
-    private void setContentFragment(){
-        if (mEmojiAlbumFragment == null){
-            mEmojiAlbumFragment = new EmojiAlbumFragment();
-        }
     }
 
     @Override

@@ -10,7 +10,11 @@
         android:label="超级表情包" >
         <action
             android:id="@+id/action_emojiAlbumFragment_to_emojisFragment"
-            app:destination="@id/emojisFragment" />
+            app:destination="@id/emojisFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/emojisFragment"

@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -108,19 +109,33 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.add){
-            AppDatabase instance = AppDatabase.getInstance(this);
-            EmojiAlbumEntity entity = new EmojiAlbumEntity();
-            entity.id = 0;
-            entity.emojiAlbumTitle = "test";
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    instance.emojiAlbumDao().insertAll(entity);
-                    //弹出通知
-                    mHandler.post(() -> Toast.makeText(getApplicationContext(), "新建成功", Toast.LENGTH_SHORT).show());
-                }
-            }).start();
+            showCreateEmojiAlbumDialog();
         }
         return super.onOptionsItemSelected(item);
+    }
+    
+    private void showCreateEmojiAlbumDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog dialog = builder.create();
+        View dialogView = View.inflate(this, R.layout.dialog_create_emoji_album, null);
+        dialog.setView(dialogView);
+        dialogView.findViewById(R.id.btn_confirm).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AppDatabase instance = AppDatabase.getInstance(MainActivity.this);
+                EmojiAlbumEntity entity = new EmojiAlbumEntity();
+                entity.id = 0;
+                entity.emojiAlbumTitle = "test";
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        instance.emojiAlbumDao().insertAll(entity);
+                        //弹出通知
+                        mHandler.post(() -> Toast.makeText(getApplicationContext(), "新建成功", Toast.LENGTH_SHORT).show());
+                    }
+                }).start();
+            }
+        });
+        dialog.show();
     }
 }

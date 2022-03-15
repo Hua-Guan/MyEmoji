@@ -1,9 +1,13 @@
 package pri.guanhua.myemoji;
 
+import android.content.ContentUris;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,7 +32,12 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
 import pri.guanhua.myemoji.model.bean.EmojiAlbumBean;
+import pri.guanhua.myemoji.model.bean.UserAlbumBean;
 import pri.guanhua.myemoji.model.database.AppDatabase;
 import pri.guanhua.myemoji.model.entity.EmojiAlbumEntity;
 import pri.guanhua.myemoji.model.viewmodel.AppViewModel;
@@ -99,12 +108,15 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.R)
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.add){
             if (mUserPosition.equals("EMOJI_ALBUM")){
                 showCreateEmojiAlbumDialog();
             }else if (mUserPosition.equals("EMOJIS")){
+                getUserAlbum();
+                //导航到下一页
                 NavHostFragment navHostFragment =
                         (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.content_frame);
                 assert navHostFragment != null;
@@ -177,4 +189,68 @@ public class MainActivity extends AppCompatActivity {
         mAppViewModel.getUserPositionLiveData().observe(this, observer);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.R)
+    private void getUserAlbum(){
+        Uri collection;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            collection = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL);
+        } else {
+            collection = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        }
+        String[] projection = new String[]{
+                MediaStore.Images.Media._ID,
+                MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
+                MediaStore.Images.Media.DISPLAY_NAME,
+        };
+        //获取所有的相册名
+        Cursor cursor = getApplicationContext().getContentResolver().query(
+                collection,
+                projection,
+                null,
+                null,
+                null
+        );
+        HashSet<String> userAlbum = new HashSet<>();
+
+        while (cursor.moveToNext()){
+            userAlbum.add(cursor.getString(1));
+        }
+        //获取每个相册的第一张图的路径和图片数量
+        List<UserAlbumBean> list = new ArrayList<>();
+        String selection = MediaStore.Images.Media.BUCKET_DISPLAY_NAME + " == ?";
+        int id = 0;
+        for (String item : userAlbum){
+            String[] selectionArgs = new String[]{item};
+            Cursor cursorFistUriAndCount = getApplicationContext().getContentResolver().query(
+                    collection,
+                    projection,
+                    selection,
+                    selectionArgs,
+                    null
+            );
+            UserAlbumBean bean = new UserAlbumBean();
+            int count = 0; //计数器
+            bean.setUserAlbumTitle(item);
+            bean.setUserAlbumId(id);
+            while (cursorFistUriAndCount.moveToNext()){
+                //设置相册第一张图片的路径
+                if (bean.getUserAlbumUri() == null){
+                    Uri contentUri = ContentUris.withAppendedId(
+                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                            cursorFistUriAndCount.getLong(0)
+                    );
+                    bean.setUserAlbumUri(contentUri.toString());
+                }
+                count++;
+                bean.setUserAlbumCount(String.valueOf(count));
+            }
+            id++;
+            list.add(bean);
+        }
+        //通过ViewModel把list传递给UserAlbumFragment
+        if (mAppViewModel == null){
+            mAppViewModel = new ViewModelProvider(this).get(AppViewModel.class);
+        }
+        mAppViewModel.getUserAlbumListMutableLiveData().setValue(list);
+    }
 }

@@ -3,9 +3,9 @@ package pri.guanhua.myemoji.model.bean;
 public class UserAlbumBean {
 
     private int UserAlbumId = 0;
-    private String UserAlbumUri = "";
-    private String UserAlbumTitle = "";
-    private String UserAlbumCount = "";
+    private String UserAlbumUri = null;
+    private String UserAlbumTitle = null;
+    private String UserAlbumCount = null;
 
     public int getUserAlbumId() {
         return UserAlbumId;

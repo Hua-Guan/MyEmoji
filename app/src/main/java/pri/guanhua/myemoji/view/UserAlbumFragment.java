@@ -4,13 +4,19 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.util.List;
+
 import pri.guanhua.myemoji.R;
+import pri.guanhua.myemoji.model.adapter.UserAlbumAdapter;
+import pri.guanhua.myemoji.model.bean.UserAlbumBean;
 import pri.guanhua.myemoji.model.viewmodel.AppViewModel;
 
 public class UserAlbumFragment extends Fragment {
@@ -18,6 +24,10 @@ public class UserAlbumFragment extends Fragment {
     private View mView = null;
 
     private AppViewModel model = null;
+
+    private ListView mListView = null;
+
+    private UserAlbumAdapter mAdapter = null;
 
     @Nullable
     @Override
@@ -31,7 +41,9 @@ public class UserAlbumFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        initView();
         updateUserPositionState();
+        setListView();
     }
 
     /**
@@ -43,4 +55,25 @@ public class UserAlbumFragment extends Fragment {
         }
         model.getUserPositionLiveData().setValue("USER_ALBUM");
     }
+
+    private void initView(){
+        if (mListView == null){
+            mListView = mView.findViewById(R.id.list_user_album);
+        }
+    }
+
+    private void setListView(){
+        if (model == null){
+            model = new ViewModelProvider(requireActivity()).get(AppViewModel.class);
+        }
+        Observer<List<UserAlbumBean>> observer = new Observer<List<UserAlbumBean>>() {
+            @Override
+            public void onChanged(List<UserAlbumBean> userAlbumBeans) {
+                UserAlbumAdapter adapter = new UserAlbumAdapter(userAlbumBeans, UserAlbumFragment.this.getContext());
+                mListView.setAdapter(adapter);
+            }
+        };
+        model.getUserAlbumListMutableLiveData().observe(getViewLifecycleOwner(), observer);
+    }
+
 }

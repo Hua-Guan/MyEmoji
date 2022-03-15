@@ -1,5 +1,7 @@
 package pri.guanhua.myemoji.view;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -11,6 +13,8 @@ import android.widget.GridView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -21,6 +25,7 @@ import androidx.navigation.Navigation;
 import java.util.ArrayList;
 import java.util.List;
 
+import pri.guanhua.myemoji.MainActivity;
 import pri.guanhua.myemoji.R;
 import pri.guanhua.myemoji.model.adapter.EmojiAlbumAdapter;
 import pri.guanhua.myemoji.model.bean.EmojiAlbumBean;
@@ -39,7 +44,7 @@ public class EmojiAlbumFragment extends Fragment {
     private GridView mGridEmojiAlbum = null;
     //表情包专辑适配器
     private EmojiAlbumAdapter mAdapter = null;
-    List<EmojiAlbumBean> mList = new ArrayList<>();
+    private List<EmojiAlbumBean> mList = new ArrayList<>();
     private AppViewModel model = null;
 
     @Nullable
@@ -110,9 +115,14 @@ public class EmojiAlbumFragment extends Fragment {
         mGridEmojiAlbum.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (ContextCompat.checkSelfPermission(EmojiAlbumFragment.this.requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED){
+                    ActivityCompat.requestPermissions(EmojiAlbumFragment.this.requireActivity(),
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                    Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                }
                 Navigation.findNavController(mGridEmojiAlbum).navigate(R.id.action_emojiAlbumFragment_to_emojisFragment);
             }
         });
     }
-
 }

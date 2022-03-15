@@ -4,4 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <GridView
+        android:id="@+id/grid_emojis"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:columnWidth="105dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="56dp"
+        android:listSelector="@android:color/transparent"
+        android:numColumns="3" />
+
 </LinearLayout>

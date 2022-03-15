@@ -18,8 +18,10 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -42,6 +44,12 @@ public class MainActivity extends AppCompatActivity {
     private final Handler mHandler = new Handler(Looper.myLooper());
     //viewModel
     private AppViewModel mAppViewModel = null;
+    /**
+     * 当用户在emoji_album页面时，工具栏的添加按钮会添加收藏夹；
+     * 当用户在emojis页面时，工具栏的添加按钮会进入浏览系统图片页面。
+     * 此属性默认为emoji_album。
+     */
+    private String mUserPosition = "EMOJI_ALBUM";
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -50,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initView();
         setToolbar();
+        setUserPositionObserver();
     }
 
     private void initView(){
@@ -93,7 +102,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.add){
-            showCreateEmojiAlbumDialog();
+            if (mUserPosition.equals("EMOJI_ALBUM")){
+                showCreateEmojiAlbumDialog();
+            }else if (mUserPosition.equals("EMOJIS")){
+                NavHostFragment navHostFragment =
+                        (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.content_frame);
+                assert navHostFragment != null;
+                NavController navController = navHostFragment.getNavController();
+                navController.navigate(R.id.action_emojisFragment_to_userAlbumFragment);
+            }else if (mUserPosition.equals("USER_ALBUM")){
+
+            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -144,4 +163,18 @@ public class MainActivity extends AppCompatActivity {
         });
         dialog.show();
     }
+
+    private void setUserPositionObserver(){
+        if (mAppViewModel == null){
+            mAppViewModel = new ViewModelProvider(this).get(AppViewModel.class);
+        }
+        Observer<String> observer = new Observer<String>(){
+            @Override
+            public void onChanged(String s) {
+                mUserPosition = s;
+            }
+        };
+        mAppViewModel.getUserPositionLiveData().observe(this, observer);
+    }
+
 }

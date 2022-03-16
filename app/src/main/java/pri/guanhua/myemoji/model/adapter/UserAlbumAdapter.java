@@ -46,6 +46,7 @@ public class UserAlbumAdapter extends BaseAdapter {
             convertView = LayoutInflater.from(context).inflate(R.layout.item_user_album_list, parent, false);
             Holder holder = new Holder();
             holder.mUserAlbumImage = convertView.findViewById(R.id.img_user_album);
+            holder.mUserAlbumImage.setClipToOutline(true);
             holder.mTextUserAlbumTitle = convertView.findViewById(R.id.text_user_album_title);
             holder.mTextUserAlbumCount = convertView.findViewById(R.id.text_user_album_count);
 

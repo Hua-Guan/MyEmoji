@@ -7,12 +7,14 @@ import java.util.List;
 
 import pri.guanhua.myemoji.model.bean.EmojiAlbumBean;
 import pri.guanhua.myemoji.model.bean.UserAlbumBean;
+import pri.guanhua.myemoji.model.bean.UserImageBean;
 
 public class AppViewModel extends ViewModel {
 
     private MutableLiveData<EmojiAlbumBean> emojiAlbumAddLiveData = null;
     private MutableLiveData<String> userPositionLiveData = null;
     private MutableLiveData<List<UserAlbumBean>> userAlbumListMutableLiveData = null;
+    private MutableLiveData<List<UserImageBean>> userImageListLiveData = null;
 
     public MutableLiveData<EmojiAlbumBean> getEmojiAlbumAddLiveData() {
 
@@ -34,5 +36,12 @@ public class AppViewModel extends ViewModel {
             userAlbumListMutableLiveData = new MutableLiveData<>();
         }
         return userAlbumListMutableLiveData;
+    }
+
+    public MutableLiveData<List<UserImageBean>> getUserImageListLiveData() {
+        if (userImageListLiveData == null){
+            userImageListLiveData = new MutableLiveData<>();
+        }
+        return userImageListLiveData;
     }
 }

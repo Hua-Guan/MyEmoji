@@ -31,5 +31,17 @@
     <fragment
         android:id="@+id/userAlbumFragment"
         android:name="pri.guanhua.myemoji.view.UserAlbumFragment"
-        android:label="用户相册" />
+        android:label="用户相册" >
+        <action
+            android:id="@+id/action_userAlbumFragment_to_userImagesFragment"
+            app:destination="@id/userImagesFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/userImagesFragment"
+        android:name="pri.guanhua.myemoji.view.UserImagesFragment"
+        android:label="用户表情包" />
 </navigation>

@@ -11,7 +11,9 @@
         <ImageView
             android:id="@+id/img_user_album"
             android:layout_width="64dp"
-            android:layout_height="64dp"/>
+            android:layout_height="64dp"
+            android:scaleType="centerCrop"
+            android:background="@drawable/shape_rectangle"/>
         <LinearLayout
             android:layout_width="100dp"
             android:layout_height="64dp"

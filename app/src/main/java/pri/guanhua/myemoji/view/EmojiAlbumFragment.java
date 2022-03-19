@@ -98,17 +98,18 @@ public class EmojiAlbumFragment extends Fragment {
     }
 
     private void setOnEmojiAlbumAddObserver(){
-        if (model == null){
+        //要做一个判空，不然会设置多个观察者。
+        if (model == null) {
             model = new ViewModelProvider(requireActivity()).get(AppViewModel.class);
+            Observer<EmojiAlbumBean> observer = new Observer<EmojiAlbumBean>() {
+                @Override
+                public void onChanged(EmojiAlbumBean emojiAlbumBean) {
+                    mList.add(emojiAlbumBean);
+                    mAdapter.notifyDataSetChanged();
+                }
+            };
+            model.getEmojiAlbumAddLiveData().observe(getViewLifecycleOwner(), observer);
         }
-        Observer<EmojiAlbumBean> observer = new Observer<EmojiAlbumBean>(){
-            @Override
-            public void onChanged(EmojiAlbumBean emojiAlbumBean) {
-                mList.add(emojiAlbumBean);
-                mAdapter.notifyDataSetChanged();
-            }
-        };
-        model.getEmojiAlbumAddLiveData().observe(getViewLifecycleOwner(), observer);
     }
 
     private void setOnGridViewItemClickListener(){

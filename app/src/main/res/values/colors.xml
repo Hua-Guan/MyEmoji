@@ -9,5 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="split_line">#d8d8d8</color>
     <color name="color_filter0">#22000000</color>
-    <color name="color_filter1">#44000000</color>
+    <color name="color_filter1">#99ffffff</color>
 </resources>

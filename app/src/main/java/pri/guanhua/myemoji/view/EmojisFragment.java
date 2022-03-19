@@ -51,10 +51,10 @@ public class EmojisFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initView();
-        setEmojisGridView();
         updateUserPositionState();
         updateUserCurrentAlbum();
         setOnEmojiSaveComplete();
+        setEmojisGridView();
     }
 
     private void initView(){
@@ -112,19 +112,21 @@ public class EmojisFragment extends Fragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                EmojisDao emojisDao = AppDatabase.getInstance(getContext()).emojisDao();
-                List<EmojisEntity> emojis = emojisDao.getEmojisByAlbum(mUserCurrentAlbum);
+                EmojisDao emojisDao = AppDatabase.getInstance(getActivity()).emojisDao();
+                List<EmojisEntity> emojis = emojisDao.getAll();
                 List<EmojisBean> list = new ArrayList<>();
                 for (int i = 0; i < emojis.size(); i++){
-                    EmojisBean bean = new EmojisBean();
-                    bean.setId(emojis.get(i).id);
-                    bean.setEmojiUri(emojis.get(i).emojiUri);
-                    list.add(bean);
+                    if (emojis.get(i).emojiAlbum.equals(mUserCurrentAlbum)){
+                        EmojisBean bean = new EmojisBean();
+                        bean.setId(emojis.get(i).id);
+                        bean.setEmojiUri(emojis.get(i).emojiUri);
+                        list.add(bean);
+                    }
                 }
+                EmojisAdapter adapter = new EmojisAdapter(getActivity(), list);
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        EmojisAdapter adapter = new EmojisAdapter(getContext(), list);
                         mEmojisGridView.setAdapter(adapter);
                     }
                 });

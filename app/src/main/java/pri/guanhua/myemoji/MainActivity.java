@@ -172,11 +172,7 @@ public class MainActivity extends AppCompatActivity {
                                 if (mAppViewModel == null){
                                     mAppViewModel = new ViewModelProvider(MainActivity.this).get(AppViewModel.class);
                                 }
-                                EmojiAlbumBean bean = new EmojiAlbumBean();
-                                bean.setEmojiAlbumUri(null);
-                                bean.setEmojiAlbumTitle(editText.getText().toString());
-                                bean.setEmojiAlbumCount(null);
-                                mAppViewModel.getEmojiAlbumAddLiveData().setValue(bean);
+                                mAppViewModel.getEmojiAlbumAddLiveData().setValue("UPDATE_EMOJI_ALBUM");
                             }
                         });
                     }

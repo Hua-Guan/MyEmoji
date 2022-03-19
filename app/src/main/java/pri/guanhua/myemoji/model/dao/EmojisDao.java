@@ -11,7 +11,7 @@ import pri.guanhua.myemoji.model.entity.EmojisEntity;
 @Dao
 public interface EmojisDao {
 
-    @Query("SELECT * FROM EmojisEntity WHERE emojiAlbum=(:emojiAlbum)")
+    @Query("SELECT * FROM EmojisEntity WHERE emojiAlbum =:emojiAlbum")
     List<EmojisEntity> getEmojisByAlbum(String emojiAlbum);
 
     @Query("SELECT * FROM EmojisEntity")

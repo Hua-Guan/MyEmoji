@@ -11,7 +11,7 @@ import pri.guanhua.myemoji.model.bean.UserImageBean;
 
 public class AppViewModel extends ViewModel {
 
-    private MutableLiveData<EmojiAlbumBean> emojiAlbumAddLiveData = null;
+    private MutableLiveData<String> emojiAlbumAddLiveData = null;
     private MutableLiveData<String> userPositionLiveData = null;
     private MutableLiveData<List<UserAlbumBean>> userAlbumListMutableLiveData = null;
     private MutableLiveData<List<UserImageBean>> userImageListLiveData = null;
@@ -19,7 +19,7 @@ public class AppViewModel extends ViewModel {
     private MutableLiveData<String> userCurrentAlbumLiveData = null;
     private MutableLiveData<String> onHasSavedEmojiLiveData = null;
 
-    public MutableLiveData<EmojiAlbumBean> getEmojiAlbumAddLiveData() {
+    public MutableLiveData<String> getEmojiAlbumAddLiveData() {
 
         if (emojiAlbumAddLiveData == null){
             emojiAlbumAddLiveData = new MutableLiveData<>();

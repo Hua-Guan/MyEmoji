@@ -122,6 +122,9 @@ public class EmojiAlbumFragment extends Fragment {
                             new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
                                     Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
                 }
+                //更新用户选择的收藏夹
+                model.getUserCurrentAlbumLiveData().setValue(mList.get(position).getEmojiAlbumTitle());
+                //导航到下一页
                 Navigation.findNavController(mGridEmojiAlbum).navigate(R.id.action_emojiAlbumFragment_to_emojisFragment);
             }
         });

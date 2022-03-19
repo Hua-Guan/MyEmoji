@@ -1,12 +1,15 @@
 package pri.guanhua.myemoji.view;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ListAdapter;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,6 +24,9 @@ import pri.guanhua.myemoji.model.adapter.UserAlbumAdapter;
 import pri.guanhua.myemoji.model.adapter.UserImagesAdapter;
 import pri.guanhua.myemoji.model.bean.UserAlbumBean;
 import pri.guanhua.myemoji.model.bean.UserImageBean;
+import pri.guanhua.myemoji.model.dao.EmojisDao;
+import pri.guanhua.myemoji.model.database.AppDatabase;
+import pri.guanhua.myemoji.model.entity.EmojisEntity;
 import pri.guanhua.myemoji.model.viewmodel.AppViewModel;
 
 public class UserImagesFragment extends Fragment {
@@ -32,6 +38,10 @@ public class UserImagesFragment extends Fragment {
     private AppViewModel model = null;
 
     private List<UserImageBean> mList = null;
+
+    private String mUserCurrentSelectedAlbum = "";
+
+    private Handler mHandler = new Handler(Looper.myLooper());
 
     @Nullable
     @Override
@@ -48,6 +58,9 @@ public class UserImagesFragment extends Fragment {
         initView();
         setGridView();
         setGridViewOnClickListener();
+        setUserPosition();
+        updateUserCurrentAlbumTitle();
+        saveEmojisInDatabase();
     }
 
     private void initView(){
@@ -59,16 +72,17 @@ public class UserImagesFragment extends Fragment {
     private void setGridView(){
         if (model == null){
             model = new ViewModelProvider(requireActivity()).get(AppViewModel.class);
+
+            Observer<List<UserImageBean>> observer = new Observer<List<UserImageBean>>() {
+                @Override
+                public void onChanged(List<UserImageBean> userImageBeans) {
+                    mList = userImageBeans;
+                    UserImagesAdapter adapter = new UserImagesAdapter(mList, UserImagesFragment.this.getContext());
+                    mGridView.setAdapter(adapter);
+                }
+            };
+            model.getUserImageListLiveData().observe(getViewLifecycleOwner(), observer);
         }
-        Observer<List<UserImageBean>> observer = new Observer<List<UserImageBean>>() {
-            @Override
-            public void onChanged(List<UserImageBean> userImageBeans) {
-                mList = userImageBeans;
-                UserImagesAdapter adapter = new UserImagesAdapter(mList, UserImagesFragment.this.getContext());
-                mGridView.setAdapter(adapter);
-            }
-        };
-        model.getUserImageListLiveData().observe(getViewLifecycleOwner(), observer);
     }
 
     private void setGridViewOnClickListener(){
@@ -85,6 +99,52 @@ public class UserImagesFragment extends Fragment {
                 adapter.notifyDataSetChanged();
             }
         });
+    }
+
+    private void setUserPosition(){
+        model.getUserPositionLiveData().setValue("USER_IMAGES");
+    }
+
+    private void updateUserCurrentAlbumTitle(){
+        Observer<String> observer = new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                mUserCurrentSelectedAlbum = s;
+            }
+        };
+        model.getUserCurrentAlbumLiveData().observe(getViewLifecycleOwner(), observer);
+    }
+
+    private void saveEmojisInDatabase(){
+        Observer<String> observer = new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        EmojisDao emojisDao = AppDatabase.getInstance(getContext()).emojisDao();
+                        for (int i = 0 ; i < mList.size(); i++){
+                            UserImageBean bean = mList.get(i);
+                            if (bean.isSelected()){
+                                EmojisEntity entity = new EmojisEntity();
+                                entity.id = 0;
+                                entity.emojiUri = bean.getImageUri();
+                                entity.emojiAlbum = mUserCurrentSelectedAlbum;
+                                emojisDao.insertEmojis(entity);
+                            }
+                        }
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                //通知表情包保存已经完成
+                                model.getOnHasSavedEmojiLiveData().setValue("EMOJI_SAVE_COMPLETE");
+                            }
+                        });
+                    }
+                }).start();
+            }
+        };
+        model.getSaveEmojiLiveData().observe(getViewLifecycleOwner(), observer);
     }
 
 }

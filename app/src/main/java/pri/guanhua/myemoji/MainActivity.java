@@ -38,6 +38,7 @@ import java.util.List;
 
 import pri.guanhua.myemoji.model.bean.EmojiAlbumBean;
 import pri.guanhua.myemoji.model.bean.UserAlbumBean;
+import pri.guanhua.myemoji.model.dao.EmojisDao;
 import pri.guanhua.myemoji.model.database.AppDatabase;
 import pri.guanhua.myemoji.model.entity.EmojiAlbumEntity;
 import pri.guanhua.myemoji.model.viewmodel.AppViewModel;
@@ -124,6 +125,15 @@ public class MainActivity extends AppCompatActivity {
                 navController.navigate(R.id.action_emojisFragment_to_userAlbumFragment);
             }else if (mUserPosition.equals("USER_ALBUM")){
 
+            }else if (mUserPosition.equals("USER_IMAGES")){
+                //回退到表情包页
+                NavHostFragment navHostFragment =
+                        (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.content_frame);
+                assert navHostFragment != null;
+                NavController navController = navHostFragment.getNavController();
+                navController.popBackStack(R.id.emojisFragment, false);
+                //开始保存
+                mAppViewModel.getSaveEmojiLiveData().setValue("SAVE_EMOJI");
             }
         }
         return super.onOptionsItemSelected(item);

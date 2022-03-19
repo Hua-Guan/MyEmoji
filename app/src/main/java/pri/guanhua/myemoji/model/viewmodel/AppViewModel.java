@@ -15,6 +15,9 @@ public class AppViewModel extends ViewModel {
     private MutableLiveData<String> userPositionLiveData = null;
     private MutableLiveData<List<UserAlbumBean>> userAlbumListMutableLiveData = null;
     private MutableLiveData<List<UserImageBean>> userImageListLiveData = null;
+    private MutableLiveData<String> saveEmojiLiveData = null;
+    private MutableLiveData<String> userCurrentAlbumLiveData = null;
+    private MutableLiveData<String> onHasSavedEmojiLiveData = null;
 
     public MutableLiveData<EmojiAlbumBean> getEmojiAlbumAddLiveData() {
 
@@ -43,5 +46,26 @@ public class AppViewModel extends ViewModel {
             userImageListLiveData = new MutableLiveData<>();
         }
         return userImageListLiveData;
+    }
+
+    public MutableLiveData<String> getSaveEmojiLiveData() {
+        if (saveEmojiLiveData == null){
+            saveEmojiLiveData = new MutableLiveData<>();
+        }
+        return saveEmojiLiveData;
+    }
+
+    public MutableLiveData<String> getUserCurrentAlbumLiveData() {
+        if (userCurrentAlbumLiveData == null){
+            userCurrentAlbumLiveData = new MutableLiveData<>();
+        }
+        return userCurrentAlbumLiveData;
+    }
+
+    public MutableLiveData<String> getOnHasSavedEmojiLiveData() {
+        if (onHasSavedEmojiLiveData == null){
+            onHasSavedEmojiLiveData = new MutableLiveData<>();
+        }
+        return onHasSavedEmojiLiveData;
     }
 }

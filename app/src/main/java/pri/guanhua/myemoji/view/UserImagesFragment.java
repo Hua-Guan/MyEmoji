@@ -4,7 +4,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ListAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,6 +31,8 @@ public class UserImagesFragment extends Fragment {
 
     private AppViewModel model = null;
 
+    private List<UserImageBean> mList = null;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -43,6 +47,7 @@ public class UserImagesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         initView();
         setGridView();
+        setGridViewOnClickListener();
     }
 
     private void initView(){
@@ -58,11 +63,28 @@ public class UserImagesFragment extends Fragment {
         Observer<List<UserImageBean>> observer = new Observer<List<UserImageBean>>() {
             @Override
             public void onChanged(List<UserImageBean> userImageBeans) {
-                UserImagesAdapter adapter = new UserImagesAdapter(userImageBeans, UserImagesFragment.this.getContext());
+                mList = userImageBeans;
+                UserImagesAdapter adapter = new UserImagesAdapter(mList, UserImagesFragment.this.getContext());
                 mGridView.setAdapter(adapter);
             }
         };
         model.getUserImageListLiveData().observe(getViewLifecycleOwner(), observer);
+    }
+
+    private void setGridViewOnClickListener(){
+        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                UserImageBean bean = mList.get(position);
+                if (bean.isSelected()){
+                    bean.setSelected(false);
+                }else {
+                    bean.setSelected(true);
+                }
+                UserImagesAdapter adapter = (UserImagesAdapter) mGridView.getAdapter();
+                adapter.notifyDataSetChanged();
+            }
+        });
     }
 
 }

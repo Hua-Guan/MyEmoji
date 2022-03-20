@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -54,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
     private final Handler mHandler = new Handler(Looper.myLooper());
     //viewModel
     private AppViewModel mAppViewModel = null;
+    //左边抽屉view
+    NavigationView navView = null;
     /**
      * 当用户在emoji_album页面时，工具栏的添加按钮会添加收藏夹；
      * 当用户在emojis页面时，工具栏的添加按钮会进入浏览系统图片页面。
@@ -69,6 +72,10 @@ public class MainActivity extends AppCompatActivity {
         initView();
         setToolbar();
         setUserPositionObserver();
+        //设置用户头像
+        setUserAvatar();
+        //设置左边抽屉式view的菜单的item的监听
+        setNavigationItemSelectedListener();
     }
 
     private void initView(){
@@ -99,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
                 .setOpenableLayout(mDrawerLayout).build();
         NavigationUI.setupWithNavController(mToolbar, navController, build);
         //把抽屉和导航图绑定
-        NavigationView navView = findViewById(R.id.left_drawer);
+        navView = findViewById(R.id.left_drawer);
         NavigationUI.setupWithNavController(navView, navController);
     }
 
@@ -259,4 +266,22 @@ public class MainActivity extends AppCompatActivity {
         }
         mAppViewModel.getUserAlbumListMutableLiveData().setValue(list);
     }
+
+    private void setUserAvatar(){
+        ImageView avatar = navView.getHeaderView(0).findViewById(R.id.user_avatar);
+        avatar.setClipToOutline(true);
+    }
+
+    private void setNavigationItemSelectedListener(){
+        navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if (item.getItemId() == R.id.cloud_emoji){
+                    Toast.makeText(getApplicationContext(), "测试", Toast.LENGTH_SHORT).show();
+                }
+                return false;
+            }
+        });
+    }
+
 }

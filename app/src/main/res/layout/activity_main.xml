@@ -41,6 +41,8 @@
         android:layout_gravity="left"
         android:choiceMode="singleChoice"
         android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header"
+        app:menu="@menu/activity_main_drawer"
         android:background="@android:color/white"
         tools:ignore="RtlHardcoded" />
 

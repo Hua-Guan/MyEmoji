@@ -1,11 +1,13 @@
 package pri.guanhua.myemoji.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import androidx.annotation.NonNull;
@@ -36,6 +38,8 @@ public class EmojisFragment extends Fragment {
 
     private String mUserCurrentAlbum = "";
 
+    private List<EmojisBean> list;
+
     private Handler mHandler = new Handler(Looper.myLooper());
 
     @Nullable
@@ -55,6 +59,7 @@ public class EmojisFragment extends Fragment {
         updateUserCurrentAlbum();
         setOnEmojiSaveComplete();
         setEmojisGridView();
+        setEmojisGridViewOnClickListener();
     }
 
     private void initView(){
@@ -114,7 +119,7 @@ public class EmojisFragment extends Fragment {
             public void run() {
                 EmojisDao emojisDao = AppDatabase.getInstance(getActivity()).emojisDao();
                 List<EmojisEntity> emojis = emojisDao.getAll();
-                List<EmojisBean> list = new ArrayList<>();
+                list = new ArrayList<>();
                 for (int i = 0; i < emojis.size(); i++){
                     if (emojis.get(i).emojiAlbum.equals(mUserCurrentAlbum)){
                         EmojisBean bean = new EmojisBean();
@@ -133,4 +138,19 @@ public class EmojisFragment extends Fragment {
             }
         }).start();
     }
+
+    private void setEmojisGridViewOnClickListener(){
+        mEmojisGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setPackage("com.tencent.mobileqq");
+                intent.putExtra(Intent.EXTRA_STREAM, list.get(position).getEmojiUri());
+                intent.setType("image/*");
+                intent.setClassName("com.tencent.mobileqq", "com.tencent.mobileqq.activity.JumpActivity");//QQ
+                getContext().startActivity(intent);
+            }
+        });
+    }
+
 }

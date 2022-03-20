@@ -54,7 +54,7 @@ public class EmojiAlbumAdapter extends BaseAdapter {
             holder.mEmojiAlbum.setClipToOutline(true);
             if (bean.getEmojiAlbumUri() != null) {
                 //加载封面
-                Glide.with(convertView).load(list.get(position)).into(holder.mEmojiAlbum);
+                Glide.with(convertView).load(list.get(position).getEmojiAlbumUri()).into(holder.mEmojiAlbum);
             }
             if (bean.getEmojiAlbumTitle() != null) {
                 //设置标题
@@ -71,7 +71,7 @@ public class EmojiAlbumAdapter extends BaseAdapter {
             EmojiAlbumBean bean = list.get(position);
             if (bean.getEmojiAlbumUri() != null) {
                 //加载封面
-                Glide.with(convertView).load(list.get(position)).into(holder.mEmojiAlbum);
+                Glide.with(convertView).load(list.get(position).getEmojiAlbumUri()).into(holder.mEmojiAlbum);
             }
             if (bean.getEmojiAlbumTitle() != null) {
                 //设置标题

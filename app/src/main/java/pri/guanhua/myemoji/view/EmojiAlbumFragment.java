@@ -30,8 +30,10 @@ import pri.guanhua.myemoji.R;
 import pri.guanhua.myemoji.model.adapter.EmojiAlbumAdapter;
 import pri.guanhua.myemoji.model.bean.EmojiAlbumBean;
 import pri.guanhua.myemoji.model.dao.EmojiAlbumDao;
+import pri.guanhua.myemoji.model.dao.EmojisDao;
 import pri.guanhua.myemoji.model.database.AppDatabase;
 import pri.guanhua.myemoji.model.entity.EmojiAlbumEntity;
+import pri.guanhua.myemoji.model.entity.EmojisEntity;
 import pri.guanhua.myemoji.model.viewmodel.AppViewModel;
 
 public class EmojiAlbumFragment extends Fragment {
@@ -112,15 +114,22 @@ public class EmojiAlbumFragment extends Fragment {
     private void setAdapter(){
         mList = new ArrayList<>();
         EmojiAlbumDao emojiAlbumDao = AppDatabase.getInstance(getContext()).emojiAlbumDao();
+        EmojisDao emojisDao = AppDatabase.getInstance(getContext()).emojisDao();
         new Thread(new Runnable() {
             @Override
             public void run() {
                 List<EmojiAlbumEntity> all = emojiAlbumDao.getAll();
                 for (int i = 0; i < all.size(); i++){
+                    List<EmojisEntity> emojis = emojisDao.getEmojisByAlbum(all.get(i).emojiAlbumTitle);
                     EmojiAlbumBean bean = new EmojiAlbumBean();
-                    bean.setEmojiAlbumUri(null);
+                    if (emojis.size()>0){
+                        bean.setEmojiAlbumUri(emojis.get(0).emojiUri);
+                        bean.setEmojiAlbumCount(String.valueOf(emojis.size()));
+                    }else {
+                        bean.setEmojiAlbumUri(null);
+                        bean.setEmojiAlbumCount(null);
+                    }
                     bean.setEmojiAlbumTitle(all.get(i).emojiAlbumTitle);
-                    bean.setEmojiAlbumCount(null);
                     mList.add(bean);
                 }
                 mHandler.post(new Runnable() {

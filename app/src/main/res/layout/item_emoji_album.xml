@@ -8,6 +8,7 @@
         android:id="@+id/emoji_album"
         android:layout_width="160dp"
         android:layout_height="160dp"
+        android:scaleType="centerCrop"
         android:layout_gravity="center_horizontal"
         android:background="@drawable/shape_rectangle"
         android:src="@drawable/ic_default_album"/>

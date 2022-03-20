@@ -2,8 +2,8 @@
     <!-- Base application theme. -->
     <style name="Theme.MyEmoji" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/white</item>
-        <item name="colorPrimaryDark">@color/white</item>
+        <item name="colorPrimary">@color/color_filter1</item>
+        <item name="colorPrimaryDark">@color/color_filter1</item>
         <item name="colorAccent">@color/black</item>
         <!-- Customize your theme here. -->
     </style>

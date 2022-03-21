@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <ImageView
+        android:id="@+id/img_back"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginLeft="12dp"
+        android:src="@drawable/ic_to_left"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/split_line"
+        android:background="@color/split_line"
+        android:layout_marginTop="18dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="160dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:textSize="24dp"
+            android:gravity="center_vertical"
+            android:text="账号"
+            android:layout_marginLeft="48dp"/>
+
+        <EditText
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:text="密码"
+            android:textSize="24dp"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="48dp"/>
+
+        <EditText
+            android:layout_width="200dp"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:text="确认密码"
+            android:textSize="24dp"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="28dp"/>
+
+        <EditText
+            android:layout_width="200dp"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
+    <Button
+        android:layout_width="160dp"
+        android:layout_height="48dp"
+        android:text="登入或注册"
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="24dp"/>
+
+</LinearLayout>

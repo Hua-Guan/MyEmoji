@@ -1,6 +1,7 @@
 package pri.guanhua.myemoji;
 
 import android.content.ContentUris;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
@@ -15,6 +16,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -43,6 +45,7 @@ import pri.guanhua.myemoji.model.dao.EmojisDao;
 import pri.guanhua.myemoji.model.database.AppDatabase;
 import pri.guanhua.myemoji.model.entity.EmojiAlbumEntity;
 import pri.guanhua.myemoji.model.viewmodel.AppViewModel;
+import pri.guanhua.myemoji.view.login.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -74,6 +77,8 @@ public class MainActivity extends AppCompatActivity {
         setUserPositionObserver();
         //设置用户头像
         setUserAvatar();
+        //设置用户登入
+        setUserLogin();
         //设置左边抽屉式view的菜单的item的监听
         setNavigationItemSelectedListener();
     }
@@ -270,6 +275,17 @@ public class MainActivity extends AppCompatActivity {
     private void setUserAvatar(){
         ImageView avatar = navView.getHeaderView(0).findViewById(R.id.user_avatar);
         avatar.setClipToOutline(true);
+    }
+
+    private void setUserLogin(){
+        TextView login = navView.getHeaderView(0).findViewById(R.id.user_name);
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void setNavigationItemSelectedListener(){

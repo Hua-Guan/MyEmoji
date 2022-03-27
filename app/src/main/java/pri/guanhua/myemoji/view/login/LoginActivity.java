@@ -1,20 +1,48 @@
 package pri.guanhua.myemoji.view.login;
 
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.HashMap;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import pri.guanhua.myemoji.R;
+import pri.guanhua.myemoji.view.UserConst;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private static final String URL = "http://192.168.31.13:8080/USER_LOGIN_OR_REGISTER";
+
     private ImageView mBack = null;
+    private Button mLoginOrRegister = null;
+    private EditText mEditAccount = null;
+    private EditText mEditPassword = null;
+    private EditText mEditConfirmPassword = null;
+
+    private Handler mHandler = new Handler(Looper.myLooper());
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -24,6 +52,7 @@ public class LoginActivity extends AppCompatActivity {
         setStatusBar();
         initView();
         setBack();
+        setLoginOrRegister();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -36,6 +65,10 @@ public class LoginActivity extends AppCompatActivity {
 
     private void initView(){
         mBack = findViewById(R.id.img_back);
+        mLoginOrRegister = findViewById(R.id.btn_login_or_register);
+        mEditAccount = findViewById(R.id.edit_account);
+        mEditPassword = findViewById(R.id.edit_password);
+        mEditConfirmPassword = findViewById(R.id.edit_confirm);
     }
 
     private void setBack(){
@@ -43,6 +76,55 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+    }
+
+    private void setLoginOrRegister(){
+        mLoginOrRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                OkHttpClient client = new OkHttpClient();
+                RequestBody body = new FormBody.Builder()
+                        .add("uaccount", mEditAccount.getText().toString())
+                        .add("upassword", mEditPassword.getText().toString())
+                        .build();
+                Request request = new Request.Builder()
+                        .url(URL)
+                        .post(body)
+                        .build();
+                client.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        assert response.body() != null;
+                        String responseStr = response.body().string();
+                        if (responseStr.equals("YES")){
+                            SharedPreferences preferences = getSharedPreferences(UserConst.USER_DATA, MODE_PRIVATE);
+                            SharedPreferences.Editor edit = preferences.edit();
+                            edit.putString(UserConst.USER_LOGIN_STATE, UserConst.USER_LOGIN_TRUE);
+                            edit.apply();
+                            mHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(LoginActivity.this, "登入成功", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                            finish();
+                        }else if (responseStr.equals("NO")){
+                            mHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(LoginActivity.this, "账号或密码错误", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    }
+                });
             }
         });
     }

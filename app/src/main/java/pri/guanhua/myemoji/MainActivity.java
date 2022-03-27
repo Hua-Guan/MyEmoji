@@ -2,6 +2,7 @@ package pri.guanhua.myemoji;
 
 import android.content.ContentUris;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,6 +40,8 @@ import com.google.android.material.navigation.NavigationView;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import pri.guanhua.myemoji.model.bean.EmojiAlbumBean;
 import pri.guanhua.myemoji.model.bean.UserAlbumBean;
@@ -45,6 +49,7 @@ import pri.guanhua.myemoji.model.dao.EmojisDao;
 import pri.guanhua.myemoji.model.database.AppDatabase;
 import pri.guanhua.myemoji.model.entity.EmojiAlbumEntity;
 import pri.guanhua.myemoji.model.viewmodel.AppViewModel;
+import pri.guanhua.myemoji.view.UserConst;
 import pri.guanhua.myemoji.view.login.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -279,13 +284,17 @@ public class MainActivity extends AppCompatActivity {
 
     private void setUserLogin(){
         TextView login = navView.getHeaderView(0).findViewById(R.id.user_name);
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                startActivity(intent);
-            }
-        });
+        if (detectHasLoginState()){
+            login.setOnClickListener(null);
+        }else {
+            login.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                }
+            });
+        }
     }
 
     private void setNavigationItemSelectedListener(){
@@ -298,6 +307,15 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    /**
+     * 检测登入状态，用sharePreferences来储存状态。
+     */
+    private boolean detectHasLoginState(){
+        SharedPreferences sp = getSharedPreferences(UserConst.USER_DATA, MODE_PRIVATE);
+        String state = sp.getString(UserConst.USER_LOGIN_STATE, UserConst.USER_LOGIN_FALSE);
+        return state.equals(UserConst.USER_LOGIN_TRUE);
     }
 
 }

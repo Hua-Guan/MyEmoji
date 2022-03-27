@@ -47,9 +47,9 @@
 
    <TextView
        android:id="@+id/text_emoji_count"
-       android:layout_width="100dp"
+       android:layout_width="120dp"
        android:layout_height="match_parent"
-       android:text="表情包总数:"
+       android:text="云表情包总数:"
        android:textSize="16dp"
        android:paddingLeft="12dp"
        android:gravity="center_vertical"/>

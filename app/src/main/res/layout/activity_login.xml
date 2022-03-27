@@ -34,6 +34,7 @@
             android:layout_marginLeft="48dp"/>
 
         <EditText
+            android:id="@+id/edit_account"
             android:layout_width="200dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"/>
@@ -54,6 +55,7 @@
             android:layout_marginLeft="48dp"/>
 
         <EditText
+            android:id="@+id/edit_password"
             android:layout_width="200dp"
             android:layout_height="match_parent"/>
 
@@ -73,12 +75,14 @@
             android:layout_marginLeft="28dp"/>
 
         <EditText
+            android:id="@+id/edit_confirm"
             android:layout_width="200dp"
             android:layout_height="match_parent"/>
 
     </LinearLayout>
 
     <Button
+        android:id="@+id/btn_login_or_register"
         android:layout_width="160dp"
         android:layout_height="48dp"
         android:text="登入或注册"

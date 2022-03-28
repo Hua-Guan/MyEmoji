@@ -315,7 +315,8 @@ public class MainActivity extends AppCompatActivity {
     private boolean detectHasLoginState(){
         SharedPreferences sp = getSharedPreferences(UserConst.USER_DATA, MODE_PRIVATE);
         String state = sp.getString(UserConst.USER_LOGIN_STATE, UserConst.USER_LOGIN_FALSE);
-        return state.equals(UserConst.USER_LOGIN_TRUE);
+        //return state.equals(UserConst.USER_LOGIN_TRUE);
+        return false;
     }
 
 }

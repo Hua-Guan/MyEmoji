@@ -1,5 +1,6 @@
 package pri.guanhua.myemoji.view.login;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,13 +32,15 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import pri.guanhua.myemoji.R;
 import pri.guanhua.myemoji.view.UserConst;
+import pri.guanhua.myemoji.view.register.RegisterActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
     private static final String URL = "http://192.168.31.13:8080/USER_LOGIN_OR_REGISTER";
 
     private ImageView mBack = null;
-    private Button mLoginOrRegister = null;
+    private Button mLogin = null;
+    private Button mRegister = null;
     private EditText mEditAccount = null;
     private EditText mEditPassword = null;
     private EditText mEditConfirmPassword = null;
@@ -52,7 +55,8 @@ public class LoginActivity extends AppCompatActivity {
         setStatusBar();
         initView();
         setBack();
-        setLoginOrRegister();
+        setLogin();
+        setRegisterListener();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -65,7 +69,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private void initView(){
         mBack = findViewById(R.id.img_back);
-        mLoginOrRegister = findViewById(R.id.btn_login_or_register);
+        mLogin = findViewById(R.id.btn_login);
+        mRegister = findViewById(R.id.btn_register);
         mEditAccount = findViewById(R.id.edit_account);
         mEditPassword = findViewById(R.id.edit_password);
         mEditConfirmPassword = findViewById(R.id.edit_confirm);
@@ -80,8 +85,8 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void setLoginOrRegister(){
-        mLoginOrRegister.setOnClickListener(new View.OnClickListener() {
+    private void setLogin(){
+        mLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 OkHttpClient client = new OkHttpClient();
@@ -96,7 +101,12 @@ public class LoginActivity extends AppCompatActivity {
                 client.newCall(request).enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(LoginActivity.this, "连接服务器失败", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
 
                     @Override
@@ -125,6 +135,16 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
                 });
+            }
+        });
+    }
+
+    private void setRegisterListener(){
+        mRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(intent);
             }
         });
     }

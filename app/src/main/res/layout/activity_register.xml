@@ -82,7 +82,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/btn_login_or_register"
+        android:id="@+id/btn_register"
         android:layout_width="100dp"
         android:layout_height="48dp"
         android:text="注册"

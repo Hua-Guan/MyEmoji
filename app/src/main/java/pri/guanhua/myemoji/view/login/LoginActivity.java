@@ -36,7 +36,7 @@ import pri.guanhua.myemoji.view.register.RegisterActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private static final String URL = "http://192.168.31.13:8080/USER_LOGIN_OR_REGISTER";
+    private static final String URL = "http://172.20.10.9:8080/" + UserConst.USER_LOGIN;
 
     private ImageView mBack = null;
     private Button mLogin = null;
@@ -113,7 +113,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void onResponse(Call call, Response response) throws IOException {
                         assert response.body() != null;
                         String responseStr = response.body().string();
-                        if (responseStr.equals("YES")){
+                        if (responseStr.equals(UserConst.USER_LOGIN_SUCCESS)){
                             SharedPreferences preferences = getSharedPreferences(UserConst.USER_DATA, MODE_PRIVATE);
                             SharedPreferences.Editor edit = preferences.edit();
                             edit.putString(UserConst.USER_LOGIN_STATE, UserConst.USER_LOGIN_TRUE);
@@ -125,11 +125,18 @@ public class LoginActivity extends AppCompatActivity {
                                 }
                             });
                             finish();
-                        }else if (responseStr.equals("NO")){
+                        }else if (responseStr.equals(UserConst.USER_PASSWORD_MISTAKE)){
                             mHandler.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(LoginActivity.this, "账号或密码错误", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(LoginActivity.this, "密码错误", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }else if (responseStr.equals(UserConst.USER_ACCOUNT_NOT_EXIST)){
+                            mHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(LoginActivity.this, "账号不存在", Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }

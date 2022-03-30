@@ -17,7 +17,10 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -32,7 +35,7 @@ import pri.guanhua.myemoji.view.register.RegisterActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private static final String URL = "http://172.20.10.9:8080/" + UserConst.USER_LOGIN;
+    private static final String URL = "http://192.168.31.13:8080/" + UserConst.USER_LOGIN;
 
     private ImageView mBack = null;
     private Button mLogin = null;
@@ -52,6 +55,7 @@ public class LoginActivity extends AppCompatActivity {
         setBack();
         setLogin();
         setRegisterListener();
+        getDefaultAvatar();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -146,6 +150,39 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
+            }
+        });
+    }
+
+    /**
+     * 通过okhttp获取默认头像
+     */
+    private void getDefaultAvatar(){
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder().url("http://192.168.31.13:8080/USER_DEFAULT_AVATAR").build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                InputStream is = null;
+                byte[] buf = new byte[1024];
+                FileOutputStream fos = null;
+                String savePath = getExternalFilesDir("Avatar").getPath();
+                File file = new File(savePath, "default.jpg");
+                fos = new FileOutputStream(file);
+                int len = 0;
+                assert response.body() != null;
+                is = response.body().byteStream();
+                while ((len = is.read(buf)) != -1){
+                    fos.write(buf, 0, len);
+                    fos.flush();
+                }
+                is.close();
+                fos.close();
             }
         });
     }

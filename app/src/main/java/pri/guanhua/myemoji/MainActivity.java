@@ -4,6 +4,8 @@ import android.content.ContentUris;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -37,6 +39,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -277,9 +280,18 @@ public class MainActivity extends AppCompatActivity {
         mAppViewModel.getUserAlbumListMutableLiveData().setValue(list);
     }
 
+    /**
+     * 设置头像
+     */
     private void setUserAvatar(){
         ImageView avatar = navView.getHeaderView(0).findViewById(R.id.user_avatar);
         avatar.setClipToOutline(true);
+        String path = getExternalFilesDir("Avatar").getPath();
+        File file = new File(path, "default.jpg");
+        if (file.exists()){
+            Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+            avatar.setImageBitmap(bitmap);
+        }
     }
 
     private void setUserLogin(){

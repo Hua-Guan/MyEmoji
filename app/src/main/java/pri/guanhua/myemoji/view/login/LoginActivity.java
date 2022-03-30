@@ -17,15 +17,11 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.json.JSONObject;
-
 import java.io.IOException;
-import java.util.HashMap;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -43,9 +39,8 @@ public class LoginActivity extends AppCompatActivity {
     private Button mRegister = null;
     private EditText mEditAccount = null;
     private EditText mEditPassword = null;
-    private EditText mEditConfirmPassword = null;
 
-    private Handler mHandler = new Handler(Looper.myLooper());
+    private final Handler mHandler = new Handler(Looper.myLooper());
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -73,7 +68,6 @@ public class LoginActivity extends AppCompatActivity {
         mRegister = findViewById(R.id.btn_register);
         mEditAccount = findViewById(R.id.edit_account);
         mEditPassword = findViewById(R.id.edit_password);
-        mEditConfirmPassword = findViewById(R.id.edit_confirm);
     }
 
     private void setBack(){

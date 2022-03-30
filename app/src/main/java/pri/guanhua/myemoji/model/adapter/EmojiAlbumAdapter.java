@@ -55,6 +55,8 @@ public class EmojiAlbumAdapter extends BaseAdapter {
             if (bean.getEmojiAlbumUri() != null) {
                 //加载封面
                 Glide.with(convertView).load(list.get(position).getEmojiAlbumUri()).into(holder.mEmojiAlbum);
+                //设置缩放
+                holder.mEmojiAlbum.setScaleType(ImageView.ScaleType.MATRIX);
             }
             if (bean.getEmojiAlbumTitle() != null) {
                 //设置标题

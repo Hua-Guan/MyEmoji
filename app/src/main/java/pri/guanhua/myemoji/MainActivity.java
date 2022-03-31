@@ -53,6 +53,7 @@ import pri.guanhua.myemoji.model.database.AppDatabase;
 import pri.guanhua.myemoji.model.entity.EmojiAlbumEntity;
 import pri.guanhua.myemoji.model.viewmodel.AppViewModel;
 import pri.guanhua.myemoji.view.UserConst;
+import pri.guanhua.myemoji.view.avatar.ChooseAvatarActivity;
 import pri.guanhua.myemoji.view.login.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -292,6 +293,14 @@ public class MainActivity extends AppCompatActivity {
             Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
             avatar.setImageBitmap(bitmap);
         }
+        //开启头像选择activity
+        avatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ChooseAvatarActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void setUserLogin(){

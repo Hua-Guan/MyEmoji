@@ -14,4 +14,5 @@ public class UserConst {
     public static final String USER_LOGIN_SUCCESS = "USER_LOGIN_SUCCESS";
     public static final String USER_REGISTER_ALREADY_EXIST = "USER_REGISTER_ALREADY_EXIST";
     public static final String USER_REGISTER_SUCCESS = "USER_REGISTER_SUCCESS";
+    public static final String USER_UPLOAD_AVATAR = "USER_UPLOAD_AVATAR";
 }

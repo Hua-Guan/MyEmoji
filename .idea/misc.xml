@@ -13,11 +13,13 @@
         <entry key="..\:/AndroidProject/MyEmoji/app/src/main/res/layout/activity_login.xml" value="0.18857142857142858" />
         <entry key="..\:/AndroidProject/MyEmoji/app/src/main/res/layout/activity_main.xml" value="0.2033514492753623" />
         <entry key="..\:/AndroidProject/MyEmoji/app/src/main/res/layout/activity_register.xml" value="0.2509057971014493" />
+        <entry key="..\:/AndroidProject/MyEmoji/app/src/main/res/layout/avtivity_choose_avatar.xml" value="0.24547101449275363" />
         <entry key="..\:/AndroidProject/MyEmoji/app/src/main/res/layout/dialog_create_emoji_album.xml" value="0.22418478260869565" />
         <entry key="..\:/AndroidProject/MyEmoji/app/src/main/res/layout/fragment_content.xml" value="0.2708333333333333" />
         <entry key="..\:/AndroidProject/MyEmoji/app/src/main/res/layout/fragment_emojis.xml" value="0.2346014492753623" />
         <entry key="..\:/AndroidProject/MyEmoji/app/src/main/res/layout/fragment_user_album.xml" value="0.2259963768115942" />
         <entry key="..\:/AndroidProject/MyEmoji/app/src/main/res/layout/fragment_user_images.xml" value="0.23505434782608695" />
+        <entry key="..\:/AndroidProject/MyEmoji/app/src/main/res/layout/item_choose_avatar.xml" value="0.24547101449275363" />
         <entry key="..\:/AndroidProject/MyEmoji/app/src/main/res/layout/item_emoji_album.xml" value="0.23369565217391305" />
         <entry key="..\:/AndroidProject/MyEmoji/app/src/main/res/layout/item_emojis.xml" value="0.22056159420289856" />
         <entry key="..\:/AndroidProject/MyEmoji/app/src/main/res/layout/item_user_album_list.xml" value="0.2259963768115942" />

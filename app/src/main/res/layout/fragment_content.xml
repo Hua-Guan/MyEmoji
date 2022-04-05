@@ -10,6 +10,7 @@
         android:layout_height="match_parent"
         android:columnWidth="160dp"
         android:layout_marginTop="4dp"
+        android:verticalSpacing="24dp"
         android:layout_marginBottom="56dp"
         android:listSelector="@android:color/transparent"
         android:numColumns="2" />

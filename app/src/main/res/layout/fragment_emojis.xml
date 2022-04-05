@@ -6,10 +6,11 @@
 
     <GridView
         android:id="@+id/grid_emojis"
-        android:layout_width="match_parent"
+        android:layout_width="331dp"
         android:layout_height="match_parent"
         android:columnWidth="105dp"
         android:verticalSpacing="8dp"
+        android:horizontalSpacing="8dp"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="56dp"
         android:listSelector="@android:color/transparent"

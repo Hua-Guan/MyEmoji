@@ -1,14 +1,18 @@
 package pri.guanhua.myemoji.view;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -60,6 +64,7 @@ public class EmojisFragment extends Fragment {
         setOnEmojiSaveComplete();
         setEmojisGridView();
         setEmojisGridViewOnClickListener();
+        setGridViewMargin();
     }
 
     private void initView(){
@@ -151,6 +156,30 @@ public class EmojisFragment extends Fragment {
                 getContext().startActivity(intent);
             }
         });
+    }
+
+    private void setGridViewMargin(){
+        WindowManager wm = (WindowManager) getActivity()
+                .getSystemService(Context.WINDOW_SERVICE);
+        int width = wm.getDefaultDisplay().getWidth();
+        int height = wm.getDefaultDisplay().getHeight();
+
+        float mar = ((float) width - dp2px(getContext(), 331))/2;
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.setMargins((int) mar,10, (int) mar,10);
+        mEmojisGridView.setLayoutParams(params);
+    }
+
+    public static int px2dp(Context context, float pxVal) {
+        float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (pxVal / scale + 0.5f);
+    }
+
+    public static int dp2px(Context context, float dpVal) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                dpVal, context.getResources().getDisplayMetrics());
     }
 
 }

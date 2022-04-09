@@ -3,10 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/upload"
+        android:icon="@drawable/ic_upload"
+        android:title="上传到云端"
+        android:orderInCategory="0"
+        app:showAsAction="always"/>
+
+    <item
         android:id="@+id/add"
         android:icon="@drawable/ic_add"
         android:title="增加"
-        android:orderInCategory="0"
+        android:orderInCategory="1"
         app:showAsAction="always"/>
 
 </menu>

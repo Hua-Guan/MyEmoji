@@ -69,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
     private AppViewModel mAppViewModel = null;
     //左边抽屉view
     NavigationView navView = null;
+    //菜单的实例
+    private Menu mMenu = null;
     /**
      * 当用户在emoji_album页面时，工具栏的添加按钮会添加收藏夹；
      * 当用户在emojis页面时，工具栏的添加按钮会进入浏览系统图片页面。
@@ -127,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+        mMenu = menu;
         return true;
     }
 
@@ -211,6 +214,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(String s) {
                 mUserPosition = s;
+                upDateMenuState();
             }
         };
         mAppViewModel.getUserPositionLiveData().observe(this, observer);
@@ -338,6 +342,28 @@ public class MainActivity extends AppCompatActivity {
         String state = sp.getString(UserConst.USER_LOGIN_STATE, UserConst.USER_LOGIN_FALSE);
         //return state.equals(UserConst.USER_LOGIN_TRUE);
         return false;
+    }
+
+    /**
+     * 更新按钮的状态
+     */
+    private void upDateMenuState(){
+        if (mUserPosition.equals("EMOJI_ALBUM")){
+            mMenu.findItem(R.id.upload).setVisible(true);
+            mMenu.findItem(R.id.add).setVisible(true);
+            mMenu.findItem(R.id.add).setIcon(R.drawable.ic_add);
+        }else if (mUserPosition.equals("EMOJIS")){
+            mMenu.findItem(R.id.upload).setVisible(false);
+            mMenu.findItem(R.id.add).setVisible(true);
+            mMenu.findItem(R.id.add).setIcon(R.drawable.ic_add);
+        }else if (mUserPosition.equals("USER_ALBUM")){
+            mMenu.findItem(R.id.upload).setVisible(false);
+            mMenu.findItem(R.id.add).setVisible(false);
+        }else if (mUserPosition.equals("USER_IMAGES")){
+            mMenu.findItem(R.id.upload).setVisible(false);
+            mMenu.findItem(R.id.add).setVisible(true);
+            mMenu.findItem(R.id.add).setIcon(R.drawable.ic_done);
+        }
     }
 
 }

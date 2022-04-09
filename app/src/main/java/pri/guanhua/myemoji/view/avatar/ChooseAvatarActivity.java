@@ -3,6 +3,7 @@ package pri.guanhua.myemoji.view.avatar;
 import android.app.DownloadManager;
 import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
@@ -10,11 +11,13 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.textclassifier.TextLinks;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -40,6 +43,7 @@ import okhttp3.Response;
 import pri.guanhua.myemoji.R;
 import pri.guanhua.myemoji.model.adapter.AvatarAdapter;
 import pri.guanhua.myemoji.model.bean.AvatarBean;
+import pri.guanhua.myemoji.utils.MyUtils;
 import pri.guanhua.myemoji.view.UserConst;
 
 public class ChooseAvatarActivity extends AppCompatActivity {
@@ -64,6 +68,7 @@ public class ChooseAvatarActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        setGridViewMargin();
     }
 
     private void initView(){
@@ -169,6 +174,23 @@ public class ChooseAvatarActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    /**
+     * 设置gridview的外边距
+     */
+    private void setGridViewMargin(){
+        WindowManager wm = (WindowManager) this
+                .getSystemService(Context.WINDOW_SERVICE);
+        int width = wm.getDefaultDisplay().getWidth();
+        int height = wm.getDefaultDisplay().getHeight();
+
+        float mar = ((float) width - MyUtils.dp2px(this, 323))/2;
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.setMargins((int) mar,10, (int) mar,10);
+        mGridView.setLayoutParams(params);
     }
 
 }

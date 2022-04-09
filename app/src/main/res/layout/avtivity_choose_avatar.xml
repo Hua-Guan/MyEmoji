@@ -38,7 +38,7 @@
 
     <GridView
         android:id="@+id/grid_choose_avatar"
-        android:layout_width="match_parent"
+        android:layout_width="323dp"
         android:layout_height="match_parent"
         android:columnWidth="105dp"
         android:background="@drawable/shape_rectangle_stroke"

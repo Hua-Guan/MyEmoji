@@ -31,6 +31,7 @@ import pri.guanhua.myemoji.model.dao.EmojisDao;
 import pri.guanhua.myemoji.model.database.AppDatabase;
 import pri.guanhua.myemoji.model.entity.EmojisEntity;
 import pri.guanhua.myemoji.model.viewmodel.AppViewModel;
+import pri.guanhua.myemoji.utils.MyUtils;
 
 public class EmojisFragment extends Fragment {
 
@@ -164,22 +165,12 @@ public class EmojisFragment extends Fragment {
         int width = wm.getDefaultDisplay().getWidth();
         int height = wm.getDefaultDisplay().getHeight();
 
-        float mar = ((float) width - dp2px(getContext(), 331))/2;
+        float mar = ((float) width - MyUtils.dp2px(getContext(), 331))/2;
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.setMargins((int) mar,10, (int) mar,10);
         mEmojisGridView.setLayoutParams(params);
-    }
-
-    public static int px2dp(Context context, float pxVal) {
-        float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (pxVal / scale + 0.5f);
-    }
-
-    public static int dp2px(Context context, float dpVal) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                dpVal, context.getResources().getDisplayMetrics());
     }
 
 }

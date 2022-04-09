@@ -1,6 +1,7 @@
 package pri.guanhua.myemoji.view;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,8 +9,10 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,6 +38,7 @@ import pri.guanhua.myemoji.model.database.AppDatabase;
 import pri.guanhua.myemoji.model.entity.EmojiAlbumEntity;
 import pri.guanhua.myemoji.model.entity.EmojisEntity;
 import pri.guanhua.myemoji.model.viewmodel.AppViewModel;
+import pri.guanhua.myemoji.utils.MyUtils;
 
 public class EmojiAlbumFragment extends Fragment {
 
@@ -65,6 +69,7 @@ public class EmojiAlbumFragment extends Fragment {
         setGridEmojiAlbum();
         setOnEmojiAlbumAddObserver();
         setOnGridViewItemClickListener();
+        setGridEmojiAlbumMargin();
     }
 
     private void initView(){
@@ -141,6 +146,23 @@ public class EmojiAlbumFragment extends Fragment {
                 });
             }
         }).start();
+    }
+
+    /**
+     * 设置gridview的外边距
+     */
+    private void setGridEmojiAlbumMargin(){
+        WindowManager wm = (WindowManager) getActivity()
+                .getSystemService(Context.WINDOW_SERVICE);
+        int width = wm.getDefaultDisplay().getWidth();
+        int height = wm.getDefaultDisplay().getHeight();
+
+        float mar = ((float) width - MyUtils.dp2px(getContext(), 328))/2;
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.setMargins((int) mar,10, (int) mar,10);
+        mGridEmojiAlbum.setLayoutParams(params);
     }
 
 }

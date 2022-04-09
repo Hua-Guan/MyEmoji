@@ -6,10 +6,11 @@
 
     <GridView
         android:id="@+id/grid_emoji_album"
-        android:layout_width="match_parent"
+        android:layout_width="328dp"
         android:layout_height="match_parent"
         android:columnWidth="160dp"
         android:layout_marginTop="4dp"
+        android:horizontalSpacing="8dp"
         android:verticalSpacing="24dp"
         android:layout_marginBottom="56dp"
         android:listSelector="@android:color/transparent"

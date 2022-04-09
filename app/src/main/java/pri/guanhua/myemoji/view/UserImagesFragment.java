@@ -1,13 +1,16 @@
 package pri.guanhua.myemoji.view;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.Toast;
 
@@ -28,6 +31,7 @@ import pri.guanhua.myemoji.model.dao.EmojisDao;
 import pri.guanhua.myemoji.model.database.AppDatabase;
 import pri.guanhua.myemoji.model.entity.EmojisEntity;
 import pri.guanhua.myemoji.model.viewmodel.AppViewModel;
+import pri.guanhua.myemoji.utils.MyUtils;
 
 public class UserImagesFragment extends Fragment {
 
@@ -61,6 +65,7 @@ public class UserImagesFragment extends Fragment {
         setUserPosition();
         updateUserCurrentAlbumTitle();
         saveEmojisInDatabase();
+        setGridViewMargin();
     }
 
     private void initView(){
@@ -145,6 +150,23 @@ public class UserImagesFragment extends Fragment {
             }
         };
         model.getSaveEmojiLiveData().observe(getViewLifecycleOwner(), observer);
+    }
+
+    /**
+     * 设置gridview的外边距
+     */
+    private void setGridViewMargin(){
+        WindowManager wm = (WindowManager) getActivity()
+                .getSystemService(Context.WINDOW_SERVICE);
+        int width = wm.getDefaultDisplay().getWidth();
+        int height = wm.getDefaultDisplay().getHeight();
+
+        float mar = ((float) width - MyUtils.dp2px(getContext(), 323))/2;
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.setMargins((int) mar,10, (int) mar,10);
+        mGridView.setLayoutParams(params);
     }
 
 }

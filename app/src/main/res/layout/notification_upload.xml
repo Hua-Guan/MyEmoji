@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="64dp">
+
+    <ImageView
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ic_img"
+        android:layout_marginStart="8dp"
+        android:layout_gravity="center_vertical"/>
+
+    <LinearLayout
+        android:layout_width="200dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="16dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/text_uploading"
+            android:layout_width="match_parent"
+            android:text="正在上传到云端"
+            android:gravity="center_vertical"
+            android:textSize="16dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="4dp"/>
+
+        <ProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="16dp"
+            style="?android:attr/progressBarStyleHorizontal"/>
+
+        <TextView
+            android:id="@+id/text_upload_speed"
+            android:layout_width="match_parent"
+            android:text="上传速度"
+            android:textSize="16dp"
+            android:gravity="center_vertical"
+            android:layout_height="20dp"/>
+
+    </LinearLayout>
+
+</LinearLayout>

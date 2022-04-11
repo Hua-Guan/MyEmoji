@@ -1,5 +1,7 @@
 package pri.guanhua.myemoji;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.ContentUris;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,6 +30,8 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -52,8 +56,10 @@ import pri.guanhua.myemoji.model.dao.EmojisDao;
 import pri.guanhua.myemoji.model.database.AppDatabase;
 import pri.guanhua.myemoji.model.entity.EmojiAlbumEntity;
 import pri.guanhua.myemoji.model.viewmodel.AppViewModel;
+import pri.guanhua.myemoji.service.EmojiUploadService;
 import pri.guanhua.myemoji.view.UserConst;
 import pri.guanhua.myemoji.view.avatar.ChooseAvatarActivity;
+import pri.guanhua.myemoji.view.cloud.CloudEmojiActivity;
 import pri.guanhua.myemoji.view.login.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -159,6 +165,9 @@ public class MainActivity extends AppCompatActivity {
                 //开始保存
                 mAppViewModel.getSaveEmojiLiveData().setValue("SAVE_EMOJI");
             }
+        }else if (item.getItemId() == R.id.upload){
+            Intent intent = new Intent(this, EmojiUploadService.class);
+            startService(intent);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -327,7 +336,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.cloud_emoji){
-                    Toast.makeText(getApplicationContext(), "测试", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(MainActivity.this, CloudEmojiActivity.class);
+                    startActivity(intent);
                 }
                 return false;
             }

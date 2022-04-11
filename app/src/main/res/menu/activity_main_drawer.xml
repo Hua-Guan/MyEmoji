@@ -7,7 +7,10 @@
             android:id="@+id/cloud_emoji"
             android:icon="@drawable/ic_cloud"
             android:title="云表情包"/>
-
+        <item
+            android:id="@+id/emoji_market"
+            android:icon="@drawable/ic_market"
+            android:title="表情包市场"/>
     </group>
 
 </menu>

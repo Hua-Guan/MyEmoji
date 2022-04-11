@@ -40,6 +40,10 @@
         <activity android:name=".view.register.RegisterActivity"
             android:exported="false"
             android:launchMode="singleTop"/>
+        <activity android:name=".view.cloud.CloudEmojiActivity"
+            android:exported="false"
+            android:launchMode="singleTop"/>
+        <service android:name=".service.EmojiUploadService"/>
     </application>
 
 </manifest>

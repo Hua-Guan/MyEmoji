@@ -3,7 +3,11 @@ package pri.guanhua.myemoji.service;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.IBinder;
 import android.widget.RemoteViews;
@@ -11,10 +15,33 @@ import android.widget.RemoteViews;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import pri.guanhua.myemoji.R;
+import pri.guanhua.myemoji.model.dao.EmojisDao;
+import pri.guanhua.myemoji.model.database.AppDatabase;
+import pri.guanhua.myemoji.model.entity.EmojisEntity;
+import pri.guanhua.myemoji.utils.MyUtils;
+import pri.guanhua.myemoji.view.UserConst;
 
 public class EmojiUploadService extends Service {
     private static final String CHANNEL_ID = "1";
+    private static final String URL = UserConst.URL + UserConst.USER_UPLOAD_EMOJIS;
+    private static final String URL_UPDATE_USER_ALBUM = UserConst.URL + UserConst.USER_UPDATE_EMOJI;
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -28,8 +55,13 @@ public class EmojiUploadService extends Service {
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public int onStartCommand(Intent intent, int flags, int startId){
         setNotification();
+        try {
+            setUploading();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -67,4 +99,89 @@ public class EmojiUploadService extends Service {
         startForeground(Integer.parseInt(CHANNEL_ID), builder.build());
 
     }
+
+    /**
+     * 上传图片
+     */
+    private void setUploading() throws Exception{
+        //获取数据库实例
+        AppDatabase database = AppDatabase.getInstance(this);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //从数据库获取图片信息
+                EmojisDao dao = database.emojisDao();
+                List<EmojisEntity> list;
+                list = dao.getAll();
+                List<EmojisEntity> finalList = list;
+                for (int i = 0; i< finalList.size(); i++){
+                    EmojisEntity entity = finalList.get(i);
+                    //获取图片字节流
+                    byte[] bytes;
+                    try {
+                        bytes = getByteStreamByUri(Uri.parse(entity.emojiUri)).toByteArray();
+                        //开始上传
+                        OkHttpClient client = new OkHttpClient();
+                        RequestBody body = new MultipartBody.Builder()
+                                .setType(MultipartBody.FORM)
+                                .addFormDataPart("file", String.valueOf(entity.id),
+                                        RequestBody.create(MediaType.parse("multipart/form-data"), bytes))
+                                .build();
+                        Request request = new Request.Builder()
+                                .url(URL)
+                                .post(body)
+                                .build();
+                        client.newCall(request).execute();
+                        updateUserEmoji(entity.emojiAlbum, String.valueOf(entity.id), bytes);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+    }
+
+    /**
+     * 根据uri获取字节流
+     * @param uri
+     * @return
+     * @throws Exception
+     */
+    private ByteArrayOutputStream getByteStreamByUri(Uri uri) throws Exception{
+        //获取字节流
+        ContentResolver resolver = getApplicationContext()
+                .getContentResolver();
+        InputStream stream = resolver.openInputStream(uri);
+        byte[] buffer = new byte[1024];
+        int len = 0;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        while ((len = stream.read(buffer)) != -1){
+            bos.write(buffer, 0, len);
+        }
+        bos.flush();
+        stream.close();
+        return bos;
+    }
+
+    private String getUserAccount(){
+        SharedPreferences preferences = getSharedPreferences(UserConst.USER_DATA, MODE_PRIVATE);
+        String account = preferences.getString(UserConst.USER_ACCOUNT, "无");
+        return account;
+    }
+
+    private void updateUserEmoji(String album, String emojiName, byte[] bytes) throws IOException, NoSuchAlgorithmException {
+        OkHttpClient client = new OkHttpClient();
+        RequestBody body = new FormBody.Builder()
+                .add(UserConst.USER_ACCOUNT, "33")
+                .add(UserConst.USER_ALBUM, album)
+                .add(UserConst.USER_EMOJI_TITLE, emojiName)
+                .add(UserConst.USER_EMOJI_MD5, MyUtils.getMD5(bytes))
+                .build();
+        Request request = new Request.Builder()
+                .url(URL_UPDATE_USER_ALBUM)
+                .post(body)
+                .build();
+        client.newCall(request).execute();
+    }
+
 }

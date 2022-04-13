@@ -115,6 +115,8 @@ public class LoginActivity extends AppCompatActivity {
                             SharedPreferences preferences = getSharedPreferences(UserConst.USER_DATA, MODE_PRIVATE);
                             SharedPreferences.Editor edit = preferences.edit();
                             edit.putString(UserConst.USER_LOGIN_STATE, UserConst.USER_LOGIN_TRUE);
+                            edit.putString(UserConst.USER_ACCOUNT, mEditAccount.getText().toString());
+                            edit.putString(UserConst.USER_PASSWORD, mEditPassword.getText().toString());
                             edit.apply();
                             mHandler.post(new Runnable() {
                                 @Override

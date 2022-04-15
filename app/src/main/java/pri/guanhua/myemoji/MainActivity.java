@@ -94,6 +94,8 @@ public class MainActivity extends AppCompatActivity {
         setUserPositionObserver();
         //设置用户头像
         setUserAvatar();
+        //设置用户名
+        setUserName();
         //设置用户登入
         setUserLogin();
         //设置左边抽屉式view的菜单的item的监听
@@ -306,6 +308,11 @@ public class MainActivity extends AppCompatActivity {
             Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
             avatar.setImageBitmap(bitmap);
         }
+        //如果还没有登入则不能选择头像
+        if (!detectHasLoginState()){
+            Toast.makeText(this, "请先登入", Toast.LENGTH_SHORT).show();
+            return;
+        }
         //开启头像选择activity
         avatar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -316,6 +323,28 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * 设置用户名
+     */
+    private void setUserName(){
+        TextView account = navView.getHeaderView(0).findViewById(R.id.user_name);
+        if (detectHasLoginState()){
+            account.setText(getUserAccount());
+        }
+    }
+
+    /**
+     * 获取用户的登入信息
+     * @return 用户账号名
+     */
+    private String getUserAccount(){
+        SharedPreferences preferences = getSharedPreferences(UserConst.USER_DATA, MODE_PRIVATE);
+        return preferences.getString(UserConst.USER_ACCOUNT, " ");
+    }
+
+    /**
+     * 当用户未登入时才可登入
+     */
     private void setUserLogin(){
         TextView login = navView.getHeaderView(0).findViewById(R.id.user_name);
         if (detectHasLoginState()){
@@ -350,8 +379,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean detectHasLoginState(){
         SharedPreferences sp = getSharedPreferences(UserConst.USER_DATA, MODE_PRIVATE);
         String state = sp.getString(UserConst.USER_LOGIN_STATE, UserConst.USER_LOGIN_FALSE);
-        //return state.equals(UserConst.USER_LOGIN_TRUE);
-        return false;
+        return state.equals(UserConst.USER_LOGIN_TRUE);
     }
 
     /**

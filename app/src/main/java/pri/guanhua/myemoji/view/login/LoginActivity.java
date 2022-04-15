@@ -35,7 +35,7 @@ import pri.guanhua.myemoji.view.register.RegisterActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private static final String URL = "http://192.168.31.13:8080/" + UserConst.USER_LOGIN;
+    private static final String URL = UserConst.URL + UserConst.USER_LOGIN;
 
     private ImageView mBack = null;
     private Button mLogin = null;
@@ -55,7 +55,6 @@ public class LoginActivity extends AppCompatActivity {
         setBack();
         setLogin();
         setRegisterListener();
-        getDefaultAvatar();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -118,6 +117,8 @@ public class LoginActivity extends AppCompatActivity {
                             edit.putString(UserConst.USER_ACCOUNT, mEditAccount.getText().toString());
                             edit.putString(UserConst.USER_PASSWORD, mEditPassword.getText().toString());
                             edit.apply();
+                            //获取头像
+                            getDefaultAvatar();
                             mHandler.post(new Runnable() {
                                 @Override
                                 public void run() {
@@ -161,7 +162,13 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void getDefaultAvatar(){
         OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder().url("http://192.168.31.13:8080/USER_DEFAULT_AVATAR").build();
+        RequestBody body = new FormBody.Builder()
+                .add(UserConst.USER_ACCOUNT, getUserAccount())
+                .build();
+        Request request = new Request.Builder()
+                .url(UserConst.URL + UserConst.USER_DEFAULT_AVATAR)
+                .post(body)
+                .build();
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -187,6 +194,15 @@ public class LoginActivity extends AppCompatActivity {
                 fos.close();
             }
         });
+    }
+
+    /**
+     * 获取用户的登入信息
+     * @return 用户账号名
+     */
+    private String getUserAccount(){
+        SharedPreferences preferences = getSharedPreferences(UserConst.USER_DATA, MODE_PRIVATE);
+        return preferences.getString(UserConst.USER_ACCOUNT, " ");
     }
 
 }

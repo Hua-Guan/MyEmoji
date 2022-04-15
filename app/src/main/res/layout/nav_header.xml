@@ -32,7 +32,7 @@
        android:id="@+id/user_name"
        android:layout_width="match_parent"
        android:layout_height="match_parent"
-       android:text="超级表情包"
+       android:text="登入或注册"
        android:textSize="20dp"
        android:paddingStart="12dp"
        android:gravity="center_vertical"
@@ -58,7 +58,7 @@
        android:id="@+id/emojis_count"
        android:layout_width="match_parent"
        android:layout_height="match_parent"
-       android:text="100"
+       android:text="0"
        android:gravity="center_vertical"
        android:textSize="14dp"/>
 

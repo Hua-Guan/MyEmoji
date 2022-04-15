@@ -21,4 +21,6 @@ public class UserConst {
     public static final String USER_EMOJI_TITLE = "USER_ALBUM_TITLE";
     public static final String USER_UPDATE_EMOJI = "USER_UPDATE_EMOJI";
     public static final String USER_EMOJI_MD5 = "USER_EMOJI_MD5";
+    public static final String USER_DEFAULT_AVATAR = "USER_DEFAULT_AVATAR";
+    public static final String USER_UPDATE_AVATAR = "USER_UPDATE_AVATAR";
 }

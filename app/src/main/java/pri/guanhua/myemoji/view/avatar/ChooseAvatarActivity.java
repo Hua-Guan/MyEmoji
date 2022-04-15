@@ -4,10 +4,13 @@ import android.app.DownloadManager;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.view.Gravity;
 import android.view.View;
@@ -18,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -34,6 +38,7 @@ import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -48,8 +53,10 @@ import pri.guanhua.myemoji.view.UserConst;
 
 public class ChooseAvatarActivity extends AppCompatActivity {
 
-    private static final String URL = "http://192.168.31.13:8080/" + UserConst.USER_UPLOAD_AVATAR;
+    private static final String URL_UPLOAD_AVATAR = UserConst.URL + UserConst.USER_UPLOAD_AVATAR;
+    private static final String URL_UPDATE_AVATAR = UserConst.URL + UserConst.USER_UPDATE_AVATAR;
 
+    private Handler mHandler = new Handler(Looper.myLooper());
     private GridView mGridView = null;
     private ImageView mBack = null;
     private List<AvatarBean> list = new ArrayList<>();
@@ -119,6 +126,9 @@ public class ChooseAvatarActivity extends AppCompatActivity {
         mGridView.setAdapter(adapter);
     }
 
+    /**
+     * 设置上传头像，并把数据同步到数据库
+     */
     private void setUploadAvatar(){
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -140,11 +150,12 @@ public class ChooseAvatarActivity extends AppCompatActivity {
                     OkHttpClient client = new OkHttpClient();
                     RequestBody requestBody = new MultipartBody.Builder()
                             .setType(MultipartBody.FORM)
+                            .addFormDataPart(UserConst.USER_ACCOUNT, getUserAccount())
                             .addFormDataPart("file", "user_avatar.jpg",
                                     RequestBody.create(MediaType.parse("multipart/form-data"), bos.toByteArray()))
                             .build();
                     Request request = new Request.Builder()
-                            .url(URL)
+                            .url(URL_UPLOAD_AVATAR)
                             .post(requestBody)
                             .build();
                     client.newCall(request).enqueue(new Callback() {
@@ -165,6 +176,15 @@ public class ChooseAvatarActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    /**
+     * 获取用户的登入信息
+     * @return 用户账号名
+     */
+    private String getUserAccount(){
+        SharedPreferences preferences = getSharedPreferences(UserConst.USER_DATA, MODE_PRIVATE);
+        return preferences.getString(UserConst.USER_ACCOUNT, " ");
     }
 
     private void setBack(){

@@ -1,10 +1,12 @@
 package pri.guanhua.myemoji;
 
+import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.ContentUris;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -30,8 +32,10 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -61,6 +65,7 @@ import pri.guanhua.myemoji.view.UserConst;
 import pri.guanhua.myemoji.view.avatar.ChooseAvatarActivity;
 import pri.guanhua.myemoji.view.cloud.CloudEmojiActivity;
 import pri.guanhua.myemoji.view.login.LoginActivity;
+import pri.guanhua.myemoji.view.person.PersonalInfoActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -77,6 +82,8 @@ public class MainActivity extends AppCompatActivity {
     NavigationView navView = null;
     //菜单的实例
     private Menu mMenu = null;
+    //表情包总数
+    private TextView mEmojisCount;
     /**
      * 当用户在emoji_album页面时，工具栏的添加按钮会添加收藏夹；
      * 当用户在emojis页面时，工具栏的添加按钮会进入浏览系统图片页面。
@@ -92,14 +99,10 @@ public class MainActivity extends AppCompatActivity {
         initView();
         setToolbar();
         setUserPositionObserver();
-        //设置用户头像
-        setUserAvatar();
-        //设置用户名
-        setUserName();
-        //设置用户登入
-        setUserLogin();
         //设置左边抽屉式view的菜单的item的监听
         setNavigationItemSelectedListener();
+        //向用户请求权限
+        getPermission();
     }
 
     private void initView(){
@@ -296,6 +299,16 @@ public class MainActivity extends AppCompatActivity {
         mAppViewModel.getUserAlbumListMutableLiveData().setValue(list);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setUserAvatar();
+        setUserName();
+        setEmojiCount();
+        //设置用户登入
+        setUserLogin();
+    }
+
     /**
      * 设置头像
      */
@@ -308,19 +321,26 @@ public class MainActivity extends AppCompatActivity {
             Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
             avatar.setImageBitmap(bitmap);
         }
-        //如果还没有登入则不能选择头像
-        if (!detectHasLoginState()){
-            Toast.makeText(this, "请先登入", Toast.LENGTH_SHORT).show();
-            return;
-        }
         //开启头像选择activity
         avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //如果还没有登入则不能选择头像
+                if (!detectHasLoginState()){
+                    Toast.makeText(MainActivity.this, "请先登入", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Intent intent = new Intent(MainActivity.this, ChooseAvatarActivity.class);
                 startActivity(intent);
             }
         });
+    }
+
+    /**
+     * 设置表情包总数
+     */
+    private void setEmojiCount(){
+        mEmojisCount = navView.getHeaderView(0).findViewById(R.id.emojis_count);
     }
 
     /**
@@ -330,6 +350,8 @@ public class MainActivity extends AppCompatActivity {
         TextView account = navView.getHeaderView(0).findViewById(R.id.user_name);
         if (detectHasLoginState()){
             account.setText(getUserAccount());
+        }else {
+            account.setText("登入或注册");
         }
     }
 
@@ -348,7 +370,16 @@ public class MainActivity extends AppCompatActivity {
     private void setUserLogin(){
         TextView login = navView.getHeaderView(0).findViewById(R.id.user_name);
         if (detectHasLoginState()){
-            login.setOnClickListener(null);
+            //login.setOnClickListener(null);
+            login.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, PersonalInfoActivity.class);
+                    intent.putExtra(UserConst.USER_ACCOUNT, getUserAccount());
+                    intent.putExtra(UserConst.USER_EMOJIS_COUNT, mEmojisCount.getText().toString());
+                    startActivity(intent);
+                }
+            });
         }else {
             login.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -401,6 +432,18 @@ public class MainActivity extends AppCompatActivity {
             mMenu.findItem(R.id.upload).setVisible(false);
             mMenu.findItem(R.id.add).setVisible(true);
             mMenu.findItem(R.id.add).setIcon(R.drawable.ic_done);
+        }
+    }
+
+    /**
+     * 向用户请求权限
+     */
+    private void getPermission(){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
         }
     }
 

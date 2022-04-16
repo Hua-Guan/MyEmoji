@@ -1,10 +1,12 @@
 package pri.guanhua.myemoji.view.avatar;
 
+import android.Manifest;
 import android.app.DownloadManager;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
@@ -26,10 +28,13 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -49,6 +54,7 @@ import pri.guanhua.myemoji.R;
 import pri.guanhua.myemoji.model.adapter.AvatarAdapter;
 import pri.guanhua.myemoji.model.bean.AvatarBean;
 import pri.guanhua.myemoji.utils.MyUtils;
+import pri.guanhua.myemoji.view.EmojiAlbumFragment;
 import pri.guanhua.myemoji.view.UserConst;
 
 public class ChooseAvatarActivity extends AppCompatActivity {
@@ -161,12 +167,18 @@ public class ChooseAvatarActivity extends AppCompatActivity {
                     client.newCall(request).enqueue(new Callback() {
                         @Override
                         public void onFailure(Call call, IOException e) {
-
+                            mHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(ChooseAvatarActivity.this, "请检测你的网络", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         }
 
                         @Override
                         public void onResponse(Call call, Response response) throws IOException {
                             bos.close();
+                            getDefaultAvatar();
                         }
                     });
                 } catch (FileNotFoundException e) {
@@ -174,6 +186,53 @@ public class ChooseAvatarActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            }
+        });
+    }
+
+    /**
+     * 通过okhttp获取默认头像
+     */
+    private void getDefaultAvatar(){
+        OkHttpClient client = new OkHttpClient();
+        RequestBody body = new FormBody.Builder()
+                .add(UserConst.USER_ACCOUNT, getUserAccount())
+                .build();
+        Request request = new Request.Builder()
+                .url(UserConst.URL + UserConst.USER_DEFAULT_AVATAR)
+                .post(body)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                InputStream is = null;
+                byte[] buf = new byte[1024];
+                FileOutputStream fos = null;
+                String savePath = getExternalFilesDir("Avatar").getPath();
+                File file = new File(savePath, "default.jpg");
+                fos = new FileOutputStream(file);
+                int len = 0;
+                assert response.body() != null;
+                is = response.body().byteStream();
+                while ((len = is.read(buf)) != -1){
+                    fos.write(buf, 0, len);
+                    fos.flush();
+                }
+                is.close();
+                fos.close();
+                //发出上传成功提示
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(ChooseAvatarActivity.this, "上传成功", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                });
             }
         });
     }

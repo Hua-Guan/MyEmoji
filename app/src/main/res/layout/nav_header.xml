@@ -16,6 +16,7 @@
       android:layout_height="64dp"
       android:clipToOutline="true"
       android:layout_marginLeft="25dp"
+      android:scaleType="centerCrop"
       android:background="@drawable/shape_round"
       android:src="@drawable/ic_default_album"/>
 

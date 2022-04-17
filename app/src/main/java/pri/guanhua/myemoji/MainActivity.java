@@ -20,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.textclassifier.TextLinks;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -48,12 +49,20 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.navigation.NavigationView;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import pri.guanhua.myemoji.model.bean.EmojiAlbumBean;
 import pri.guanhua.myemoji.model.bean.UserAlbumBean;
 import pri.guanhua.myemoji.model.dao.EmojisDao;
@@ -68,6 +77,8 @@ import pri.guanhua.myemoji.view.login.LoginActivity;
 import pri.guanhua.myemoji.view.person.PersonalInfoActivity;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String URL_CLOUD_EMOJIS_COUNT = UserConst.URL + UserConst.USER_EMOJIS_COUNT;
 
     private FrameLayout mContainer = null;
     //Toolbar
@@ -341,6 +352,42 @@ public class MainActivity extends AppCompatActivity {
      */
     private void setEmojiCount(){
         mEmojisCount = navView.getHeaderView(0).findViewById(R.id.emojis_count);
+        if (detectHasLoginState()){
+            OkHttpClient client = new OkHttpClient();
+            RequestBody body = new FormBody.Builder()
+                    .add(UserConst.USER_ACCOUNT, getUserAccount())
+                    .build();
+            Request request = new Request.Builder()
+                    .url(URL_CLOUD_EMOJIS_COUNT)
+                    .post(body)
+                    .build();
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(MainActivity.this, "连接服务器失败", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    assert response.body() != null;
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                mEmojisCount.setText(response.body().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                }
+            });
+        }
     }
 
     /**
@@ -391,13 +438,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * 设置左边抽屉式按钮的监听器
+     */
     private void setNavigationItemSelectedListener(){
         navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.cloud_emoji){
-                    Intent intent = new Intent(MainActivity.this, CloudEmojiActivity.class);
-                    startActivity(intent);
+                    if (detectHasLoginState()){
+                        Intent intent = new Intent(MainActivity.this, CloudEmojiActivity.class);
+                        startActivity(intent);
+                    }else {
+                        Toast.makeText(MainActivity.this, "请先登入", Toast.LENGTH_SHORT).show();
+                    }
                 }
                 return false;
             }

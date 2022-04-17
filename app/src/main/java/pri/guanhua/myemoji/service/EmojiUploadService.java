@@ -124,6 +124,8 @@ public class EmojiUploadService extends Service {
                         OkHttpClient client = new OkHttpClient();
                         RequestBody body = new MultipartBody.Builder()
                                 .setType(MultipartBody.FORM)
+                                .addFormDataPart(UserConst.USER_ACCOUNT, getUserAccount())
+                                .addFormDataPart(UserConst.USER_EMOJI_MD5, MyUtils.getMD5(bytes))
                                 .addFormDataPart("file", String.valueOf(entity.id),
                                         RequestBody.create(MediaType.parse("multipart/form-data"), bytes))
                                 .build();
@@ -172,7 +174,7 @@ public class EmojiUploadService extends Service {
     private void updateUserEmoji(String album, String emojiName, byte[] bytes) throws IOException, NoSuchAlgorithmException {
         OkHttpClient client = new OkHttpClient();
         RequestBody body = new FormBody.Builder()
-                .add(UserConst.USER_ACCOUNT, "33")
+                .add(UserConst.USER_ACCOUNT, getUserAccount())
                 .add(UserConst.USER_ALBUM, album)
                 .add(UserConst.USER_EMOJI_TITLE, emojiName)
                 .add(UserConst.USER_EMOJI_MD5, MyUtils.getMD5(bytes))

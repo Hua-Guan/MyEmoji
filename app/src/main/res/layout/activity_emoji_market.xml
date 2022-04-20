@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_filter1"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/img_back"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginLeft="12dp"
+            android:src="@drawable/ic_to_left"/>
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="160dp"
+            android:layout_height="48dp"
+            android:text="表情包市场"
+            android:textSize="20dp"
+            android:gravity="center_vertical"
+            android:textStyle="bold"
+            android:layout_marginTop="6dp"
+            android:layout_marginLeft="16dp"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/split_line"
+        android:background="@color/split_line" />
+
+    <GridView
+        android:id="@+id/grid_emojis"
+        android:layout_width="331dp"
+        android:layout_height="match_parent"
+        android:columnWidth="105dp"
+        android:verticalSpacing="8dp"
+        android:horizontalSpacing="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="56dp"
+        android:listSelector="@android:color/transparent"
+        android:numColumns="3" />
+
+</LinearLayout>

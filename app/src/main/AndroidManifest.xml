@@ -46,6 +46,9 @@
         <activity android:name=".view.person.PersonalInfoActivity"
             android:exported="false"
             android:launchMode="singleTop"/>
+        <activity android:name=".view.market.EmojiMarketActivity"
+            android:exported="false"
+            android:launchMode="singleTop"/>
         <service android:name=".service.EmojiUploadService"/>
     </application>
 

@@ -26,4 +26,5 @@ public class UserConst {
     public static final String USER_PERSONAL_INFO = "USER_PERSONAL_INFO";
     public static final String USER_EMOJIS_COUNT = "USER_EMOJIS_COUNT";
     public static final String USER_CLOUD_EMOJI = "USER_CLOUD_EMOJI";
+    public static final String USER_EMOJI_MARKET = "USER_EMOJI_MARKET";
 }

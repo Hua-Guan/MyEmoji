@@ -74,6 +74,7 @@ import pri.guanhua.myemoji.view.UserConst;
 import pri.guanhua.myemoji.view.avatar.ChooseAvatarActivity;
 import pri.guanhua.myemoji.view.cloud.CloudEmojiActivity;
 import pri.guanhua.myemoji.view.login.LoginActivity;
+import pri.guanhua.myemoji.view.market.EmojiMarketActivity;
 import pri.guanhua.myemoji.view.person.PersonalInfoActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -451,6 +452,11 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(intent);
                     }else {
                         Toast.makeText(MainActivity.this, "请先登入", Toast.LENGTH_SHORT).show();
+                    }
+                }else if (item.getItemId() == R.id.emoji_market){
+                    if (detectHasLoginState()){
+                        Intent intent = new Intent(MainActivity.this, EmojiMarketActivity.class);
+                        startActivity(intent);
                     }
                 }
                 return false;

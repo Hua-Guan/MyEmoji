@@ -1,7 +1,7 @@
 package pri.guanhua.myemoji.view;
 
 public class UserConst {
-    public static final String URL = "http://192.168.31.13:8080/";
+    public static final String URL = "http://emoji.itismyduty.xyz:8080/";
     public static final String USER_DATA = "USER_DATA";
     public static final String USER_LOGIN_STATE = "USER_LOGIN_STATE";
     public static final String USER_LOGIN_FALSE = "USER_LOGIN_FALSE";

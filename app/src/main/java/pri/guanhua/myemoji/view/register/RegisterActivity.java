@@ -36,7 +36,7 @@ import pri.guanhua.myemoji.view.UserConst;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private static final String URL = "http://192.168.31.13:8080/" + UserConst.USER_REGISTER;
+    private static final String URL = UserConst.URL + UserConst.USER_REGISTER;
 
     private Handler mHandler = new Handler(Looper.myLooper());
 

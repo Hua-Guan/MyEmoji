@@ -145,6 +145,9 @@ public class EmojisFragment extends Fragment {
         }).start();
     }
 
+    /**
+     * 当用户点击表情包时分享给qq
+     */
     private void setEmojisGridViewOnClickListener(){
         mEmojisGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

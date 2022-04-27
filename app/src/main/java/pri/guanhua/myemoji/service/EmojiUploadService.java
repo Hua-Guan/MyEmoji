@@ -9,8 +9,11 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -42,6 +45,9 @@ public class EmojiUploadService extends Service {
     private static final String CHANNEL_ID = "1";
     private static final String URL = UserConst.URL + UserConst.USER_UPLOAD_EMOJIS;
     private static final String URL_UPDATE_USER_ALBUM = UserConst.URL + UserConst.USER_UPDATE_EMOJI;
+
+    private Handler mHandler = new Handler(Looper.myLooper());
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -139,6 +145,12 @@ public class EmojiUploadService extends Service {
                         e.printStackTrace();
                     }
                 }
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(EmojiUploadService.this, "上传完成", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         }).start();
     }

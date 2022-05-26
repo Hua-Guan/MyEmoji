@@ -170,7 +170,7 @@ public class CloudEmojiActivity extends AppCompatActivity {
      */
     private void getEmojiFromServer(int position){
         String savePath = getExternalFilesDir("cloudEmoji").getPath();
-        File file = new File(savePath + "/" + mList.get(position).getId() + ".jpg");
+        File file = new File(savePath, mList.get(position).getId() + ".jpg");
         //如果文件不存在就下载后分享
         if (!file.exists()) {
             OkHttpClient client = new OkHttpClient();
@@ -199,11 +199,11 @@ public class CloudEmojiActivity extends AppCompatActivity {
                     }
                     is.close();
                     fos.close();
-                    shareQQ(savePath + "/" + mList.get(position).getId() + ".jpg");
+                    shareQQ(file.getPath());
                 }
             });
         }else {
-            shareQQ(savePath + "/" + mList.get(position).getId() + ".jpg");
+            shareQQ(file.getPath());
         }
     }
 

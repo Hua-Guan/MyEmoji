@@ -1,5 +1,6 @@
 package pri.guanhua.myemoji.view;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -34,6 +35,9 @@ import pri.guanhua.myemoji.model.entity.EmojisEntity;
 import pri.guanhua.myemoji.model.viewmodel.AppViewModel;
 import pri.guanhua.myemoji.utils.MyUtils;
 
+/**
+ * 这个fragment会展示收藏夹所有的表情包
+ */
 public class EmojisFragment extends Fragment {
 
     private View mView = null;
@@ -66,6 +70,7 @@ public class EmojisFragment extends Fragment {
         setOnEmojiSaveComplete();
         setEmojisGridView();
         setEmojisGridViewOnClickListener();
+        setGridViewLongClickDelete();
         setGridViewMargin();
     }
 
@@ -120,6 +125,9 @@ public class EmojisFragment extends Fragment {
         model.getOnHasSavedEmojiLiveData().observe(getViewLifecycleOwner(), observer);
     }
 
+    /**
+     * 为gridview填充数据
+     */
     private void setEmojisGridView(){
         new Thread(new Runnable() {
             @Override
@@ -147,6 +155,32 @@ public class EmojisFragment extends Fragment {
     }
 
     /**
+     * 设置当长按gridview的item时删除
+     */
+    private void setGridViewLongClickDelete(){
+
+        mEmojisGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                showDeleteEmojiDialog();
+                //返回值为true拦截点击事件
+                return true;
+            }
+        });
+    }
+
+    /**
+     * 创建移除表情包弹窗
+     */
+    private void showDeleteEmojiDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog dialog = builder.create();
+        View dialogView = View.inflate(getActivity(), R.layout.dialog_delete_emoji, null);
+        dialog.setView(dialogView);
+        dialog.show();
+    }
+
+    /**
      * 当用户点击表情包时分享给qq
      */
     private void setEmojisGridViewOnClickListener(){
@@ -163,6 +197,9 @@ public class EmojisFragment extends Fragment {
         });
     }
 
+    /**
+     * 为gridview设置边距
+     */
     private void setGridViewMargin(){
         WindowManager wm = (WindowManager) getActivity()
                 .getSystemService(Context.WINDOW_SERVICE);

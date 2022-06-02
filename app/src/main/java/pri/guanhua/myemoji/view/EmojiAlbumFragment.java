@@ -40,6 +40,9 @@ import pri.guanhua.myemoji.model.entity.EmojisEntity;
 import pri.guanhua.myemoji.model.viewmodel.AppViewModel;
 import pri.guanhua.myemoji.utils.MyUtils;
 
+/**
+ * 这个Fragment会展示用户创建的收藏夹。
+ */
 public class EmojiAlbumFragment extends Fragment {
 
     private View mView = null;

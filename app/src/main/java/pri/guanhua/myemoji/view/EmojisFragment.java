@@ -102,8 +102,8 @@ public class EmojisFragment extends Fragment {
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onDestroy() {
+        super.onDestroy();
         updateUserPositionStateOnUserBack();
     }
 

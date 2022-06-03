@@ -321,6 +321,18 @@ public class MainActivity extends AppCompatActivity {
         setUserLogin();
     }
 
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putString(UserConst.USER_POSITION, mUserPosition);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mUserPosition = savedInstanceState.getString(UserConst.USER_POSITION);
+    }
+
     /**
      * 设置头像
      */

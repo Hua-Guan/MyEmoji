@@ -162,7 +162,7 @@ public class EmojisFragment extends Fragment {
         mEmojisGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                showDeleteEmojiDialog();
+                showDeleteEmojiDialog(id, position);
                 //返回值为true拦截点击事件
                 return true;
             }
@@ -172,10 +172,43 @@ public class EmojisFragment extends Fragment {
     /**
      * 创建移除表情包弹窗
      */
-    private void showDeleteEmojiDialog(){
+    private void showDeleteEmojiDialog(long id, int position){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         AlertDialog dialog = builder.create();
         View dialogView = View.inflate(getActivity(), R.layout.dialog_delete_emoji, null);
+        //当用户按下yes按钮时删除表情包
+        dialogView.findViewById(R.id.btn_yes).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //从表中删除item
+                        EmojisDao emojisDao = AppDatabase.getInstance(getContext()).emojisDao();
+                        emojisDao.deleteEmoji((int) id);
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                //刷新数据
+                                list.remove(position);
+                                EmojisAdapter adapter = new EmojisAdapter(getActivity(), list);
+                                mEmojisGridView.setAdapter(adapter);
+                                adapter.notifyDataSetChanged();
+                            }
+                        });
+                    }
+                }).start();
+                dialog.cancel();
+            }
+        });
+        //当用户点击no按钮时取消弹窗
+        dialogView.findViewById(R.id.btn_no).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+            }
+        });
+
         dialog.setView(dialogView);
         dialog.show();
     }

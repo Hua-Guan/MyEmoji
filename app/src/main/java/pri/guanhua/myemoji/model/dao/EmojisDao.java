@@ -17,6 +17,9 @@ public interface EmojisDao {
     @Query("SELECT * FROM EmojisEntity")
     List<EmojisEntity> getAll();
 
+    @Query("DELETE FROM EmojisEntity WHERE id =:id")
+    void deleteEmoji(int id);
+
     @Insert
     void insertEmojis(EmojisEntity...emojisEntities);
 }

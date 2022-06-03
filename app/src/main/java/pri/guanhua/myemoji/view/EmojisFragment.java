@@ -44,6 +44,8 @@ public class EmojisFragment extends Fragment {
 
     private GridView mEmojisGridView = null;
 
+    private EmojisAdapter mAdapter;
+
     private AppViewModel model = null;
 
     private String mUserCurrentAlbum = "";
@@ -143,11 +145,11 @@ public class EmojisFragment extends Fragment {
                         list.add(bean);
                     }
                 }
-                EmojisAdapter adapter = new EmojisAdapter(getActivity(), list);
+                mAdapter = new EmojisAdapter(getActivity(), list);
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        mEmojisGridView.setAdapter(adapter);
+                        mEmojisGridView.setAdapter(mAdapter);
                     }
                 });
             }
@@ -191,9 +193,7 @@ public class EmojisFragment extends Fragment {
                             public void run() {
                                 //刷新数据
                                 list.remove(position);
-                                EmojisAdapter adapter = new EmojisAdapter(getActivity(), list);
-                                mEmojisGridView.setAdapter(adapter);
-                                adapter.notifyDataSetChanged();
+                                mAdapter.notifyDataSetChanged();
                             }
                         });
                     }

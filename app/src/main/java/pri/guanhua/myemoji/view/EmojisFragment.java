@@ -66,19 +66,19 @@ public class EmojisFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initView();
         updateUserPositionState();
         updateUserCurrentAlbum();
         setOnEmojiSaveComplete();
-        setEmojisGridView();
+        initGridView();
         setEmojisGridViewOnClickListener();
         setGridViewLongClickDelete();
         setGridViewMargin();
     }
 
-    private void initView(){
+    private void initGridView(){
         if (mEmojisGridView == null){
             mEmojisGridView = mView.findViewById(R.id.grid_emojis);
+            setEmojisGridView();
         }
     }
     /**

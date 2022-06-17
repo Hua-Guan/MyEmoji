@@ -16,17 +16,24 @@
         android:layout_height="100dp"
         android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/btn_yes"
-            android:layout_width="100dp"
-            android:layout_height="56dp"
-            android:text="yes"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp">
 
-        <Button
-            android:id="@+id/btn_no"
-            android:layout_width="100dp"
-            android:layout_height="56dp"
-            android:text="no"/>
+            <Button
+                android:id="@+id/btn_yes"
+                android:layout_width="100dp"
+                android:layout_height="56dp"
+                android:text="yes"/>
+
+            <Button
+                android:id="@+id/btn_no"
+                android:layout_width="100dp"
+                android:layout_height="56dp"
+                android:layout_alignParentEnd="true"
+                android:text="no"/>
+
+        </RelativeLayout>
 
     </LinearLayout>
 
